@@ -1,10 +1,13 @@
 const path = require('path');
 const paths = require('../../paths');
+const fs = require('fs');
 
 const linariaCache = path.resolve(paths.appNodeModules, '.cache/linaria-loader');
 
 const babelLoader = require('../loaders/babel/loader');
 const styleLoader = require('../loaders/style/loader');
+
+const babelExclude = fs.existsSync(paths.appExclude) ? require(paths.appExclude) : [];
 
 /**
  * @param {'production'|'development'} mode
@@ -39,10 +42,12 @@ module.exports = (mode = 'development', isLegacy = false) => {
       }, {
         test: /\.(js|mjs|jsx|ts|tsx)$/,
         exclude: isEnvProduction ? [
-          /runtime/
+          /runtime/,
+          ...babelExclude
         ] : [
           /node_modules/,
-          /runtime/
+          /runtime/,
+          ...babelExclude
         ],
         use: [babel, {
           loader: '@linaria/webpack-loader',

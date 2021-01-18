@@ -23,24 +23,22 @@ module.exports = (mode = 'development', options = {}) => {
   }, {
     loader: require.resolve('postcss-loader'),
     options: {
-      ident: 'postcss',
+      sourceMap: !isEnvProduction,
       postcssOptions: {
-        parser: safePostCssParser
-      },
-      plugins: () => [
-        require('postcss-flexbugs-fixes'),
-        require('postcss-preset-env')({
-          browsers: targets[mode].postcss
-        })
-      ],
-      sourceMap: !isEnvProduction
+        parser: safePostCssParser,
+        plugins: [
+          require('postcss-flexbugs-fixes'),
+          require('postcss-preset-env')({
+            browsers: targets[mode].postcss
+          })
+        ]
+      }
     }
   }, {
     loader: require.resolve('resolve-url-loader'),
     options: {
       sourceMap: !isEnvProduction,
-      root: paths.appSrc,
-      keepQuery: true
+      root: paths.appSrc
     }
   }];
 
