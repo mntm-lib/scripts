@@ -16,9 +16,7 @@ if (NODE_ENV !== 'development' && NODE_ENV !== 'production') {
 }
 
 const dotenvFiles = [
-  `${paths.dotenv}.${NODE_ENV}.local`,
   `${paths.dotenv}.local`,
-  `${paths.dotenv}.${NODE_ENV}`,
   paths.dotenv
 ].filter(Boolean);
 
@@ -50,10 +48,7 @@ module.exports = (publicUrl = '') => {
   }, {
     NODE_ENV: process.env.NODE_ENV || process.env.BABEL_ENV || 'development',
     BABEL_ENV: process.env.BABEL_ENV || process.env.NODE_ENV || 'development',
-    PUBLIC_URL: publicUrl,
-    WDS_SOCKET_HOST: process.env.WDS_SOCKET_HOST,
-    WDS_SOCKET_PATH: process.env.WDS_SOCKET_PATH,
-    WDS_SOCKET_PORT: process.env.WDS_SOCKET_PORT
+    PUBLIC_URL: publicUrl
   });
 
   const stringified = {
