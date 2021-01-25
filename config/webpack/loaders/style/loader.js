@@ -27,18 +27,13 @@ module.exports = (mode = 'development', options = {}) => {
       postcssOptions: {
         parser: safePostCssParser,
         plugins: [
+          require('postcss-import'),
           require('postcss-flexbugs-fixes'),
           require('postcss-preset-env')({
             browsers: targets[mode].postcss
           })
         ]
       }
-    }
-  }, {
-    loader: require.resolve('resolve-url-loader'),
-    options: {
-      sourceMap: !isEnvProduction,
-      root: paths.appSrc
     }
   }];
 

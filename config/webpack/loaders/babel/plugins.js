@@ -4,6 +4,12 @@ module.exports = (mode = 'development') => {
   const isEnvProduction = mode === 'production';
 
   const plugins = [[
+    require.resolve('@emotion/babel-plugin'), {
+      sourceMap: !isEnvProduction,
+      autoLabel: isEnvProduction ? 'never' : 'always',
+      labelFormat: isEnvProduction ? '' : '[filename]_[local]',
+      cssPropOptimization: isEnvProduction
+    }], [
     require.resolve('babel-plugin-named-asset-import'), {
       loaderMap: {
         svg: {
@@ -20,7 +26,7 @@ module.exports = (mode = 'development') => {
       corejs: false,
       helpers: true,
       version: require('@babel/runtime/package.json').version,
-      regenerator: true,
+      regenerator: false,
       useESModules: true,
       absoluteRuntime: path.dirname(require.resolve('@babel/runtime/package.json'))
     }], [

@@ -1,8 +1,7 @@
-const path = require('path');
-const paths = require('../../paths');
 const fs = require('fs');
 
-const linariaCache = path.resolve(paths.appNodeModules, '.cache/linaria-loader');
+const paths = require('../../paths');
+const fields = require('../../fields');
 
 const babelLoader = require('../loaders/babel/loader');
 const styleLoader = require('../loaders/style/loader');
@@ -41,28 +40,28 @@ module.exports = (mode = 'development', isLegacy = false) => {
         }
       }, {
         test: /\.(js|mjs|jsx|ts|tsx)$/,
-        exclude: isEnvProduction ? [
-          /runtime/,
-          ...babelExclude
-        ] : [
-          /node_modules/,
-          /runtime/,
-          ...babelExclude
-        ],
-        use: [babel, {
-          loader: '@linaria/webpack-loader',
-          options: {
-            displayName: !isEnvProduction,
-            cacheDirectory: linariaCache,
-            babelOptions: {
-              compact: babel.options.compact,
-              babelrc: babel.options.babelrc,
-              configFile: babel.options.configFile,
-              plugins: babel.options.plugins,
-              presets: babel.options.presets
-            }
+        exclude: /node_modules/,
+        use: babel
+      }, {
+        test: /\.(js|mjs)$/,
+        include(file) {
+          const matchPackage = file.match(/^.*[/\\]node_modules[/\\](@.*?[/\\])?.*?[/\\]/);
+          if (!matchPackage) {
+            return false;
           }
-        }]
+          const matchPackageDir = matchPackage[0];
+          const matchPackageName = matchPackageDir.slice(0, -1);
+          if (babelExclude.includes(matchPackageName)) {
+            return false;
+          }
+          try {
+            const pkg = require(matchPackageDir + 'package.json');
+            return fields.esm.some((field) => field in pkg);
+          } catch (e) {
+            return false;
+          }
+        },
+        use: babel
       }, {
         test: /\.css$/,
         use: styleLoader(mode, {

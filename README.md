@@ -7,7 +7,7 @@ A drop-in replacement for [react-scripts](https://github.com/facebook/create-rea
 - Requires Typescript
 - Supports multi-build mode for modern and legacy builds
 - Uses Preact instead of React as [@mntm/react](https://github.com/maxi-team/react-stub)
-- Provides CSS-in-JS as [linaria](https://github.com/callstack/linaria)
+- Provides CSS-in-JS as [emotion](https://emotion.sh/)
 
 ## Installation
 

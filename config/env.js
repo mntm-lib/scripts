@@ -18,7 +18,7 @@ if (NODE_ENV !== 'development' && NODE_ENV !== 'production') {
 const dotenvFiles = [
   `${paths.dotenv}.local`,
   paths.dotenv
-].filter(Boolean);
+];
 
 dotenvFiles.forEach(dotenvFile => {
   if (fs.existsSync(dotenvFile)) {
@@ -39,24 +39,21 @@ process.env.NODE_PATH = (process.env.NODE_PATH || '')
 
 const REACT_APP = /^REACT_APP_/i;
 
-module.exports = (publicUrl = '') => {
-  const raw = Object.keys(process.env).filter(key => {
-    return REACT_APP.test(key);
-  }).reduce((env, key) => {
-    env[key] = process.env[key];
+const raw = Object.keys(process.env).filter(key => {
+  return REACT_APP.test(key);
+}).reduce((env, key) => {
+  env[key] = process.env[key];
+  return env;
+}, {
+  NODE_ENV: process.env.NODE_ENV || process.env.BABEL_ENV || 'development',
+  BABEL_ENV: process.env.BABEL_ENV || process.env.NODE_ENV || 'development'
+});
+
+const stringified = {
+  'process.env': Object.keys(raw).reduce((env, key) => {
+    env[key] = JSON.stringify(raw[key]);
     return env;
-  }, {
-    NODE_ENV: process.env.NODE_ENV || process.env.BABEL_ENV || 'development',
-    BABEL_ENV: process.env.BABEL_ENV || process.env.NODE_ENV || 'development',
-    PUBLIC_URL: publicUrl
-  });
-
-  const stringified = {
-    'process.env': Object.keys(raw).reduce((env, key) => {
-      env[key] = JSON.stringify(raw[key]);
-      return env;
-    }, {})
-  };
-
-  return { raw, stringified };
+  }, {})
 };
+
+module.exports = { raw, stringified };

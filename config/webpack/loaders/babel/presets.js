@@ -14,9 +14,15 @@ module.exports = (mode = 'development', legacy = false) => {
       loose: true,
       modules: false,
       useBuiltIns: 'usage',
-      corejs: 3,
+      corejs: { version: '3.8', proposals: true },
       exclude: ['transform-typeof-symbol'],
-      targets: targets[mode].babel[target]
+      targets: targets[mode].babel[target],
+      ignoreBrowserslistConfig: true
+    }], [
+    require.resolve('@babel/preset-react'), {
+      development: !isEnvProduction,
+      throwIfNamespace: false,
+      runtime: 'automatic'
     }], [
     require.resolve('@babel/preset-typescript'), {
       isTSX: true,
@@ -24,14 +30,6 @@ module.exports = (mode = 'development', legacy = false) => {
       allowNamespaces: true,
       allowDeclareFields: true,
       onlyRemoveTypeImports: true
-    }], [
-    require.resolve('@babel/preset-react'), {
-      development: !isEnvProduction,
-      throwIfNamespace: false,
-      runtime: 'automatic'
-    }], [
-    require.resolve('@linaria/babel-preset'), {
-      displayName: !isEnvProduction
-    }
-  ]];
+    }]
+  ];
 };

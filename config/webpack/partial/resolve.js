@@ -1,6 +1,7 @@
 const aliases = require('../../alias');
 const modules = require('../../modules');
 const paths = require('../../paths');
+const fields = require('../../fields');
 
 module.exports = () => {
   return {
@@ -12,30 +13,6 @@ module.exports = () => {
       ...aliases,
       ...(modules.webpackAliases || {})
     },
-    mainFields: [
-      // these are generally shipped as a higher ES language level than `module`
-      'es2015',
-      'esm2015',
-      'fesm2015',
-      // current leading de-facto standard
-      'module',
-      // previous de-facto standard
-      'jsnext:main',
-      'jsnext',
-      // non-standard esm
-      'esm',
-      'esnext',
-      // lower ES level
-      'esm5',
-      'fesm5',
-      // standard
-      'main',
-      'browser',
-      // fallback
-      'umd:main',
-      'umd',
-      // vendor specific
-      'unpkg'
-    ]
+    mainFields: fields.all
   };
 };

@@ -25,6 +25,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     optimization: getOptimization(mode),
     resolve: getResolve(),
     module: getModule(mode, isLegacy),
-    plugins: getPlugins(mode, isLegacy)
+    plugins: getPlugins(mode, isLegacy),
+    target: isLegacy ? ['web', 'es5'] : 'web'
   };
 };

@@ -1,8 +1,6 @@
 const paths = require('../../paths');
 const path = require('path');
 
-const appPackageJson = require(paths.appPackageJson);
-
 /**
  * @param {'production'|'development'} mode
  */
@@ -11,11 +9,11 @@ module.exports = (mode = 'development', isLegacy = false) => {
   const target = isLegacy ? 'legacy' : 'modern';
 
   const baseFilename = isEnvProduction ?
-    '/[id].[fullhash:4].js' :
+    '/[id].[chunkhash:8].js' :
     '/[name].js';
 
   const baseChunkFilename = isEnvProduction ?
-    '/[id].[fullhash:4].chunk.js' :
+    '/[id].[chunkhash:8].chunk.js' :
     '/[name].chunk.js';
 
   return {
@@ -34,8 +32,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
           .resolve(info.absoluteResourcePath)
           .replace(/\\/g, '/')),
     chunkLoading: 'jsonp',
-    chunkLoadingGlobal: `mntm_${appPackageJson.name}`,
-    globalObject: 'this',
+    chunkLoadingGlobal: 'mntm',
+    globalObject: 'self',
     environment: {
       arrowFunction: !isLegacy,
       bigIntLiteral: false,

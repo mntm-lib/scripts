@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const safari = `!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}()`;
+const safariPolyfill = '(()=>{var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",e=>{if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()},!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}})()';
+
 const shared = new Set();
 
 class HtmlCrossWebpackPlugin {
@@ -49,7 +50,7 @@ class HtmlCrossWebpackPlugin {
             htmlPluginData.headTags.push({
               tagName: 'script',
               voidTag: false,
-              innerHTML: safari,
+              innerHTML: safariPolyfill,
               attributes: {
                 type: 'module'
               }

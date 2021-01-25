@@ -53,7 +53,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             keep_fargs: false,
             keep_fnames: false,
             keep_infinity: true,
-            loops: true,
+            loops: false,
             module: !isLegacy,
             negate_iife: true,
             passes: isLegacy ? 2 : 4,
@@ -62,7 +62,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             pure_getters: 'strict',
             reduce_funcs: true,
             reduce_vars: true,
-            sequences: 20,
+            sequences: 0,
             side_effects: !isLegacy,
             switches: true,
             toplevel: !isLegacy,
@@ -73,7 +73,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             unsafe_comps: !isLegacy,
             unsafe_Function: !isLegacy,
             unsafe_math: !isLegacy,
-            unsafe_symbols: !isLegacy,
+            unsafe_symbols: false,
             unsafe_methods: !isLegacy,
             unsafe_proto: !isLegacy,
             unsafe_regexp: !isLegacy,
@@ -107,8 +107,6 @@ module.exports = (mode = 'development', isLegacy = false) => {
       hidePathInfo: isEnvProduction,
       name: false
     },
-    runtimeChunk: {
-      name: runtime => `runtime-${runtime.name}`
-    }
+    runtimeChunk: 'single'
   };
 };

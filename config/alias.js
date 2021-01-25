@@ -10,7 +10,8 @@ const resolutions = Object.keys(appPackageJson.resolutions || {}).reduce((acc, n
 }, {});
 const preact = {
   react: npm('@mntm/react'),
-  'react-dom': npm('@mntm/react')
+  'react-dom': npm('@mntm/react'),
+  'preact/compat': npm('preact/compat')
 };
 const aliases = Object.assign({}, resolutions, preact);
 

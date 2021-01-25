@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 const resolve = require('resolve');
+
 const paths = require('../../paths');
+const env = require('../../env');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconHtmlWebpackPlugin = require('../plugins/html-favicon-webpack-plugin');
@@ -26,15 +28,20 @@ module.exports = (mode = 'development') => {
       inject: 'body',
       scriptLoading: 'defer',
       chunksSortMode: 'none',
-      template: paths.template
+      template: paths.template,
+      minify: isEnvProduction
     })
+  );
+
+  plugins.push(
+    new webpack.DefinePlugin(env.stringified)
   );
 
   if (isEnvProduction) {
     plugins.push(
       new MiniCssExtractPlugin({
-        filename: 'style/[id].[fullhash:4].css',
-        chunkFilename: 'style/[id].[fullhash:4].chunk.css'
+        filename: 'style/[name].[contenthash:8].css',
+        chunkFilename: 'style/[name].[chunkhash:8].chunk.css'
       })
     );
   } else {
