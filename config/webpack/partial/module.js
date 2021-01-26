@@ -45,6 +45,10 @@ module.exports = (mode = 'development', isLegacy = false) => {
       }, {
         test: /\.(js|mjs)$/,
         include(file) {
+          if (!isEnvProduction) {
+            // prevent transpile runtime in dev mode
+            return;
+          }
           const matchPackage = file.match(/^.*[/\\]node_modules[/\\](@.*?[/\\])?.*?[/\\]/);
           if (!matchPackage) {
             return false;
