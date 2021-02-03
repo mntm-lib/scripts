@@ -4,7 +4,8 @@ const fs = require('fs');
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
-const template = path.resolve(__dirname, './template/index.html');
+const appTemplate = path.resolve(__dirname, './template/index.html');
+const appDevClient = path.resolve(__dirname, './utils/WebpackDevServerClient.js');
 
 const moduleFileExtensions = ['mjs', 'js', 'jsx', 'json', 'ts', 'tsx'];
 const configFileExtensions = ['js', 'json'];
@@ -22,7 +23,8 @@ const resolveModule = (resolveFn, filePath, extensions) => {
 };
 
 module.exports = {
-  template,
+  appTemplate,
+  appDevClient,
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
