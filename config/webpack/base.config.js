@@ -22,7 +22,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     },
     devtool: isEnvProduction ? false : 'eval-cheap-module-source-map',
     output: getOutput(mode, isLegacy),
-    optimization: getOptimization(mode),
+    optimization: getOptimization(mode, isLegacy),
     resolve: getResolve(),
     module: getModule(mode, isLegacy),
     plugins: getPlugins(mode, isLegacy),
