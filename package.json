@@ -1,6 +1,6 @@
 {
   "name": "@mntm/scripts",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "author": {
     "name": "Anton Petrov",
     "email": "im@petrov.engineer",
@@ -57,6 +57,7 @@
     "dotenv": "~8.2.0",
     "dotenv-expand": "~5.1.0",
     "escape-string-regexp": "~4.0.0",
+    "fast-async": "^6.3.8",
     "file-loader": "~6.2.0",
     "filesize": "~6.1.0",
     "fork-ts-checker-webpack-plugin": "~6.1.0",

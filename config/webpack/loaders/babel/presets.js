@@ -14,8 +14,15 @@ module.exports = (mode = 'development', legacy = false) => {
       loose: true,
       modules: false,
       useBuiltIns: 'usage',
-      corejs: { version: '3.8', proposals: true },
-      exclude: ['transform-typeof-symbol'],
+      corejs: {
+        version: '3.8',
+        proposals: false
+      },
+      exclude: [
+        'transform-typeof-symbol',
+        'transform-regenerator',
+        'transform-async-to-generator'
+      ],
       targets: targets[mode].babel[target],
       ignoreBrowserslistConfig: true
     }], [

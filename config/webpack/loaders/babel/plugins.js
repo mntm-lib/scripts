@@ -35,6 +35,9 @@ module.exports = (mode = 'development') => {
     }], [
     require.resolve('@babel/plugin-proposal-nullish-coalescing-operator'), {
       loose: true
+    }], [
+    require.resolve('fast-async'), {
+      spec: true
     }]
   ];
 
