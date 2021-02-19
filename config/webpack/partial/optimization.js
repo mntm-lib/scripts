@@ -68,7 +68,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             toplevel: !isLegacy,
             top_retain: false,
             typeofs: !isLegacy,
-            unsafe: !isLegacy,
+            unsafe: false,
             unsafe_arrows: !isLegacy,
             unsafe_comps: !isLegacy,
             unsafe_Function: !isLegacy,

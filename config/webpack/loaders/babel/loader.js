@@ -14,7 +14,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
       babelrc: false,
       configFile: false,
       presets: getPresets(mode, isLegacy),
-      plugins: getPlugins(mode),
+      plugins: getPlugins(mode, isLegacy),
       cacheIdentifier: cache(mode, '@mntm/scripts'),
       cacheDirectory: true,
       cacheCompression: false,
