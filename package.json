@@ -1,6 +1,6 @@
 {
   "name": "@mntm/scripts",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "author": {
     "name": "Anton Petrov",
     "email": "im@petrov.engineer",
@@ -115,6 +115,6 @@
     }
   },
   "engines": {
-    "node": "~12.16.3"
+    "node": "^12.16.0"
   }
 }
