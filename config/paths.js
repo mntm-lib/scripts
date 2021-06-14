@@ -33,8 +33,11 @@ module.exports = {
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   appTsConfig: resolveApp('tsconfig.json'),
-  appExclude: resolveModule(resolveApp, 'babel.exclude', configFileExtensions),
+  appBabelModules: resolveModule(resolveApp, 'babel.modules', configFileExtensions),
   appNodeModules: resolveApp('node_modules'),
   publicUrlOrPath: '/',
-  moduleFileExtensions
+  moduleFileExtensions,
+
+  vkTunnelConfig: resolveApp('vk-tunnel-config.json'),
+  vkDeployConfig: resolveApp('vk-hosting-config.json')
 };

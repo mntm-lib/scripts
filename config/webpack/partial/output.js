@@ -33,7 +33,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
           .replace(/\\/g, '/')),
     chunkLoading: 'jsonp',
     chunkLoadingGlobal: 'mntm',
-    globalObject: 'self',
+    globalObject: 'window',
     environment: {
       arrowFunction: !isLegacy,
       bigIntLiteral: false,

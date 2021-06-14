@@ -7,7 +7,7 @@ const targets = require('../../../targets');
 /**
  * @param {'production'|'development'} mode
  */
-module.exports = (mode = 'development', options = {}) => {
+module.exports = (mode = 'development') => {
   const isEnvProduction = mode === 'production';
 
   const emit = isEnvProduction ? {
@@ -19,7 +19,10 @@ module.exports = (mode = 'development', options = {}) => {
 
   const loaders = [emit, {
     loader: require.resolve('css-loader'),
-    options
+    options: {
+      importLoaders: 1,
+      sourceMap: !isEnvProduction
+    }
   }, {
     loader: require.resolve('postcss-loader'),
     options: {
@@ -27,6 +30,7 @@ module.exports = (mode = 'development', options = {}) => {
       postcssOptions: {
         parser: safePostCssParser,
         plugins: [
+          require('postcss-nested'),
           require('postcss-import'),
           require('postcss-flexbugs-fixes'),
           require('postcss-preset-env')({

@@ -1,12 +1,13 @@
-const fs = require('fs');
-
 const paths = require('../../paths');
 const fields = require('../../fields');
 
 const babelLoader = require('../loaders/babel/loader');
 const styleLoader = require('../loaders/style/loader');
 
-const babelExclude = fs.existsSync(paths.appExclude) ? require(paths.appExclude) : [];
+const babelModules = Object.assign({
+  include: [],
+  exclude: []
+}, require(paths.appBabelModules));
 
 /**
  * @param {'production'|'development'} mode
@@ -55,12 +56,23 @@ module.exports = (mode = 'development', isLegacy = false) => {
           }
           const matchPackageDir = matchPackage[0];
           const matchPackageName = matchPackageDir.slice(0, -1);
-          if (babelExclude.includes(matchPackageName)) {
-            return false;
-          }
           try {
+            if (babelModules.exclude.includes(matchPackageName)) {
+              return false;
+            }
+            if (babelModules.include.includes(matchPackageName)) {
+              return true;
+            }
             const pkg = require(matchPackageDir + 'package.json');
-            return fields.esm.some((field) => field in pkg);
+            return pkg.type === 'module' || fields.esm.some((field) => {
+              if (!pkg[field]) {
+                return false;
+              }
+
+              return paths.moduleFileExtensions.some((ext) => {
+                return pkg[field].endsWith(ext);
+              });
+            });
           } catch (e) {
             return false;
           }
@@ -68,10 +80,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
         use: babel
       }, {
         test: /\.css$/,
-        use: styleLoader(mode, {
-          importLoaders: 1,
-          sourceMap: !isEnvProduction
-        }),
+        use: styleLoader(mode),
         sideEffects: true
       }, {
         loader: require.resolve('file-loader'),

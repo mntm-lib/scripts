@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const paths = require('./paths');
 const chalk = require('chalk');
@@ -48,7 +48,7 @@ const getWebpackAliases = (options = {}) => {
   }
 };
 
-function getModules() {
+const getModules = () => {
   const hasTsConfig = fs.existsSync(paths.appTsConfig);
 
   if (!hasTsConfig) {
@@ -71,6 +71,6 @@ function getModules() {
     additionalModulePaths: additionalModulePaths,
     webpackAliases: getWebpackAliases(options)
   };
-}
+};
 
 module.exports = getModules();

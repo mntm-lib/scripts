@@ -1,7 +1,7 @@
-const evalSourceMapMiddleware = require('./utils/evalSourceMapMiddleware');
-const noopServiceWorkerMiddleware = require('./utils/noopServiceWorkerMiddleware');
-const ignoredFiles = require('./utils/ignoredFiles');
-const redirectServedPath = require('./utils/redirectServedPathMiddleware');
+const evalSourceMapMiddleware = require('../lib/evalSourceMapMiddleware');
+const noopServiceWorkerMiddleware = require('../lib/noopServiceWorkerMiddleware');
+const ignoredFiles = require('../lib/ignoredFiles');
+const redirectServedPath = require('../lib/redirectServedPathMiddleware');
 const paths = require('./paths');
 
 module.exports = (allowedHost, host, port) => {

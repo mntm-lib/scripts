@@ -1,4 +1,5 @@
 const targets = require('../../../targets');
+const pkg = require('../../../../package.json');
 
 /**
  * @param {'production'|'development'} mode
@@ -6,6 +7,9 @@ const targets = require('../../../targets');
 module.exports = (mode = 'development', isLegacy = false) => {
   const isEnvProduction = mode === 'production';
   const target = isLegacy ? 'legacy' : 'modern';
+
+  const corejs = pkg.dependencies['core-js'];
+  const corejsVersion = corejs.slice(1, corejs.lastIndexOf('.'));
 
   return [[
     require.resolve('@babel/preset-env'), {
@@ -15,7 +19,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
       modules: false,
       useBuiltIns: 'usage',
       corejs: {
-        version: '3.8',
+        version: corejsVersion,
         proposals: false
       },
       exclude: isLegacy ? [] : [

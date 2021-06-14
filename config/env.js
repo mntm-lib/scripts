@@ -1,34 +1,14 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const paths = require('./paths');
-const chalk = require('chalk');
 
 delete require.cache[require.resolve('./paths')];
 
-const NODE_ENV = process.env.NODE_ENV || process.env.BABEL_ENV || 'development';
-
-if (NODE_ENV !== 'development' && NODE_ENV !== 'production') {
-  throw new Error(
-    chalk.red.bold(
-      `The NODE_ENV environment variable is "${NODE_ENV}" but was not supported.`
-    )
-  );
-}
-
-const dotenvFiles = [
-  `${paths.dotenv}.local`,
-  paths.dotenv
-];
-
-dotenvFiles.forEach(dotenvFile => {
-  if (fs.existsSync(dotenvFile)) {
-    require('dotenv-expand')(
-      require('dotenv').config({
-        path: dotenvFile
-      })
-    );
-  }
-});
+require('dotenv-expand')(
+  require('dotenv').config({
+    path: paths.dotenv
+  })
+);
 
 const appDirectory = fs.realpathSync(process.cwd());
 process.env.NODE_PATH = (process.env.NODE_PATH || '')
@@ -45,8 +25,8 @@ const raw = Object.keys(process.env).filter(key => {
   env[key] = process.env[key];
   return env;
 }, {
-  NODE_ENV: process.env.NODE_ENV || process.env.BABEL_ENV || 'development',
-  BABEL_ENV: process.env.BABEL_ENV || process.env.NODE_ENV || 'development'
+  NODE_ENV: process.env.NODE_ENV,
+  BABEL_ENV: process.env.BABEL_ENV
 });
 
 const stringified = {

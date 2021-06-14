@@ -1,40 +1,31 @@
+//
+require('../lib/unhandled');
+require('../lib/paths');
+
 // Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = 'development';
-process.env.NODE_ENV = 'development';
-
-// Makes the script crash on unhandled rejections instead of silently
-// ignoring them. In the future, promise rejections that are not handled will
-// terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
-  throw err;
-});
-
-// Ensure environment variables are read.
-require('../config/env');
+const env = require('../lib/env');
+env.fallback('development');
 
 const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
-const clearConsole = require('../config/utils/clearConsole');
-const checkRequiredFiles = require('../config/utils/checkRequiredFiles');
+const clearConsole = require('../lib/clearConsole');
 const {
   choosePort,
   createCompiler,
   prepareUrls
-} = require('../config/utils/WebpackDevServerUtils');
-const openBrowser = require('../config/utils/openBrowser');
+} = require('../lib/WebpackDevServerUtils');
+const openBrowser = require('../lib/openBrowser');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config');
 const createDevServerConfig = require('../config/webpackDevServer.config');
+const execBin = require('../lib/bin');
 const isInteractive = process.stdout.isTTY;
 
-// Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appIndexJs])) {
-  process.exit(1);
-}
-
 const HOST = '0.0.0.0';
-const PORT = parseInt(process.env.PORT, 10) || 3000;
+const PORT = 3000;
+const PROTO = 'http';
+const WS = 'ws';
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
@@ -49,13 +40,12 @@ Promise.resolve()
     }
 
     const config = configFactory;
-    const protocol = 'http';
     const appName = require(paths.appPackageJson).name;
 
     const urls = prepareUrls(
-      protocol,
+      PROTO,
       HOST,
-      port,
+      PORT,
       paths.publicUrlOrPath.slice(0, -1)
     );
     const devSocket = {
@@ -78,11 +68,11 @@ Promise.resolve()
     const serverConfig = createDevServerConfig(
       urls.lanUrlForConfig,
       HOST,
-      port
+      PORT
     );
     const devServer = new WebpackDevServer(compiler, serverConfig);
     // Launch WebpackDevServer.
-    devServer.listen(port, HOST, (err) => {
+    devServer.listen(PORT, HOST, (err) => {
       if (err) {
         return console.log(err);
       }
@@ -103,6 +93,20 @@ Promise.resolve()
     process.on('SIGINT', stop);
     process.on('SIGTERM', stop);
     process.stdin.on('end', stop);
+  })
+  .then(() => {
+    // Allow all certs
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
+    // Proxy without cert
+    process.env.PROXY_HTTP_PROTO = PROTO;
+    process.env.PROXY_WS_PROTO = WS;
+
+    // Assign current host and port
+    process.env.PROXY_HOST = HOST;
+    process.env.PROXY_PORT = PORT;
+
+    execBin('@vkontakte/vk-tunnel');
   })
   .catch(err => {
     if (err && err.message) {

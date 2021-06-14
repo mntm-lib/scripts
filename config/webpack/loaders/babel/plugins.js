@@ -7,12 +7,6 @@ module.exports = (mode = 'development', isLegacy = false) => {
   const isEnvProduction = mode === 'production';
 
   const plugins = [[
-    require.resolve('@emotion/babel-plugin'), {
-      sourceMap: !isEnvProduction,
-      autoLabel: isEnvProduction ? 'never' : 'always',
-      labelFormat: isEnvProduction ? '' : '[filename]_[local]',
-      cssPropOptimization: isEnvProduction
-    }], [
     require.resolve('babel-plugin-named-asset-import'), {
       loaderMap: {
         svg: {
