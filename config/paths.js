@@ -8,7 +8,6 @@ const appTemplate = path.resolve(__dirname, './template/index.html');
 const appDevClient = path.resolve(__dirname, './utils/WebpackDevServerClient.js');
 
 const moduleFileExtensions = ['mjs', 'js', 'jsx', 'json', 'ts', 'tsx'];
-const configFileExtensions = ['js', 'json'];
 
 const resolveModule = (resolveFn, filePath, extensions) => {
   const extension = extensions.find(extension =>
@@ -33,7 +32,7 @@ module.exports = {
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   appTsConfig: resolveApp('tsconfig.json'),
-  appBabelModules: resolveModule(resolveApp, 'babel.modules', configFileExtensions),
+  appBabelModules: resolveApp('babel.modules.json'),
   appNodeModules: resolveApp('node_modules'),
   publicUrlOrPath: '/',
   moduleFileExtensions,
