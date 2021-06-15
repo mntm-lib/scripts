@@ -1,6 +1,6 @@
 {
   "name": "@mntm/scripts",
-  "version": "3.0.0-beta.2",
+  "version": "3.0.0-beta.3",
   "author": {
     "name": "Anton Petrov",
     "email": "im@petrov.engineer",
@@ -61,11 +61,11 @@
     "fast-async": "^6.3.8",
     "file-loader": "~6.2.0",
     "filesize": "~6.3.0",
-    "fork-ts-checker-webpack-plugin": "~6.1.1",
+    "fork-ts-checker-webpack-plugin": "7.0.0-alpha.3",
     "fs-extra": "^10.0.0",
     "gzip-size": "~6.0.0",
-    "html-webpack-plugin": "~5.0.0",
-    "is-root": "^3.0.0",
+    "html-webpack-plugin": "^5.3.1",
+    "is-root": "^2.1.0",
     "mini-css-extract-plugin": "^1.6.0",
     "module-alias": "~2.2.2",
     "open": "^8.2.0",
