@@ -84,7 +84,9 @@ Promise.resolve()
     }
   )
   .then(() => {
-    execBin('@vkontakte/vk-miniapps-deploy');
+    if (fs.existsSync(paths.vkDeployConfig)) {
+      execBin('@vkontakte/vk-miniapps-deploy');
+    }
   })
   .catch(err => {
     if (err && err.message) {

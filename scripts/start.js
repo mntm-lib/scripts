@@ -6,6 +6,7 @@ require('../lib/paths');
 const env = require('../lib/env');
 env.fallback('development');
 
+const fs = require('fs-extra');
 const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
@@ -95,18 +96,23 @@ Promise.resolve()
     process.stdin.on('end', stop);
   })
   .then(() => {
-    // Allow all certs
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+    if (fs.existsSync(paths.vkTunnelConfig)) {
+      // Allow all certs
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
-    // Proxy without cert
-    process.env.PROXY_HTTP_PROTO = PROTO;
-    process.env.PROXY_WS_PROTO = WS;
+      // Proxy without cert
+      process.env.PROXY_HTTP_PROTO = PROTO;
+      process.env.PROXY_WS_PROTO = WS;
 
-    // Assign current host and port
-    process.env.PROXY_HOST = HOST;
-    process.env.PROXY_PORT = PORT;
+      // Assign current host and port
+      process.env.PROXY_HOST = HOST;
+      process.env.PROXY_PORT = PORT;
 
-    execBin('@vkontakte/vk-tunnel');
+      // Log only errors
+      process.env.LOGLEVEL = 'error';
+
+      execBin('@vkontakte/vk-tunnel');
+    }
   })
   .catch(err => {
     if (err && err.message) {
