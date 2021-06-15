@@ -5,7 +5,7 @@ const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const appTemplate = path.resolve(__dirname, './template/index.html');
-const appDevClient = path.resolve(__dirname, './utils/WebpackDevServerClient.js');
+const appDevClient = path.resolve(__dirname, '../lib/WebpackDevServerClient.js');
 
 const moduleFileExtensions = ['mjs', 'js', 'jsx', 'json', 'ts', 'tsx'];
 
