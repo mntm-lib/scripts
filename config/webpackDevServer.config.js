@@ -17,21 +17,21 @@ module.exports = (allowedHost, host, port) => {
       }
     }],
     hot: true,
-    injectHot: true,
-    injectClient: true,
     transportMode: {
       client: paths.appDevClient
     },
-    dev: {
+    devMiddleware: {
       publicPath: paths.publicUrlOrPath.slice(0, -1)
     },
     host,
     client: {
-      port
+      port,
+      overlay: false,
+      needClientEntry: true,
+      needHotEntry: true
     },
     https: false,
     http2: false,
-    overlay: false,
     historyApiFallback: {
       disableDotRule: true,
       index: paths.publicUrlOrPath
