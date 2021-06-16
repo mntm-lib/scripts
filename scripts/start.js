@@ -83,7 +83,7 @@ Promise.resolve()
       }
 
       console.log(chalk.cyan('Starting the development server...\n'));
-      openBrowser(urls.localUrlForBrowser);
+      openBrowser(urls.appUrlForBrowser);
     });
 
     const stop = () => {
@@ -112,6 +112,14 @@ Promise.resolve()
       process.env.LOGLEVEL = 'error';
 
       execBin('@vkontakte/vk-tunnel');
+    } else {
+      console.log(
+        chalk.yellow(
+          'Tunnel config not found.'
+        ) + ' ' + chalk.grey(
+          'See: https://github.com/VKCOM/vk-tunnel-client'
+        )
+      );
     }
   })
   .catch(err => {

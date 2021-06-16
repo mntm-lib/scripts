@@ -11,30 +11,14 @@ const webpack = require('webpack');
 const configFactory = require('../config/webpack.config');
 const paths = require('../config/paths');
 const formatWebpackMessages = require('../lib/formatWebpackMessages');
-const FileSizeReporter = require('../lib/FileSizeReporter');
+const size = require('../lib/size');
 const printBuildError = require('../lib/printBuildError');
 const execBin = require('../lib/bin');
-
-const measureFileSizesBeforeBuild =
-  FileSizeReporter.measureFileSizesBeforeBuild;
-const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
-
-// These sizes are pretty large. We'll warn for bundles exceeding them.
-const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
-const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
-
-// Generate configuration
-const config = configFactory;
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 Promise.resolve()
   .then(() => {
-    // First, read the current file sizes in build directory.
-    // This lets us display how much they changed later.
-    return measureFileSizesBeforeBuild(paths.appBuild);
-  })
-  .then(previousFileSizes => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
     fs.emptyDirSync(paths.appBuild);
@@ -43,10 +27,10 @@ Promise.resolve()
       dereference: true
     });
     // Start the webpack build
-    return build(previousFileSizes);
+    return build();
   })
   .then(
-    ({ stats, previousFileSizes, warnings }) => {
+    ({ stats, warnings }) => {
       if (warnings.length) {
         console.log(chalk.yellow('Compiled with warnings.\n'));
         console.log(warnings.join('\n\n'));
@@ -64,15 +48,10 @@ Promise.resolve()
         console.log(chalk.green('Compiled successfully.\n'));
       }
 
-      console.log('File sizes after gzip:\n');
-      printFileSizesAfterBuild(
+      size(
         stats,
-        previousFileSizes,
-        paths.appBuild,
-        WARN_AFTER_BUNDLE_GZIP_SIZE,
-        WARN_AFTER_CHUNK_GZIP_SIZE
+        paths.appBuild
       );
-      console.log();
     },
     err => {
       console.log(
@@ -86,6 +65,14 @@ Promise.resolve()
   .then(() => {
     if (fs.existsSync(paths.vkDeployConfig)) {
       execBin('@vkontakte/vk-miniapps-deploy');
+    } else {
+      console.log(
+        chalk.yellow(
+          'Deploy config not found.'
+        ) + ' ' + chalk.grey(
+          'See: https://github.com/VKCOM/vk-miniapps-deploy'
+        )
+      );
     }
   })
   .catch(err => {
@@ -96,10 +83,10 @@ Promise.resolve()
   });
 
 // Create the production build and print the deployment instructions.
-function build(previousFileSizes) {
+function build() {
   console.log('Creating an optimized production build...');
 
-  const compiler = webpack(config);
+  const compiler = webpack(configFactory);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       let messages;
@@ -137,7 +124,6 @@ function build(previousFileSizes) {
 
       const resolveArgs = {
         stats,
-        previousFileSizes,
         warnings: messages.warnings
       };
 

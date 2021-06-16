@@ -1,6 +1,6 @@
 {
   "name": "@mntm/scripts",
-  "version": "3.0.0-beta.4",
+  "version": "3.0.0-beta.5",
   "author": {
     "name": "Anton Petrov",
     "email": "im@petrov.engineer",
@@ -77,7 +77,6 @@
     "postcss-nested": "^5.0.5",
     "postcss-preset-env": "^6.7.0",
     "postcss-safe-parser": "^6.0.0",
-    "recursive-readdir": "~2.2.2",
     "resolve": "~1.20.0",
     "shell-quote": "~1.7.2",
     "strip-ansi": "^6.0.0",
