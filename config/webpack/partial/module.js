@@ -1,5 +1,6 @@
 const paths = require('../../paths');
 const fields = require('../../fields');
+const memoize = require('../../../lib/memoize');
 
 const babelLoader = require('../loaders/babel/loader');
 const styleLoader = require('../loaders/style/loader');
@@ -9,12 +10,60 @@ const babelModules = Object.assign({
   exclude: []
 }, require(paths.appBabelModules));
 
+const wellKnownBabelExclude = [
+  '@babel/runtime',
+  'regenerator-runtime',
+  'core-js'
+];
+
+const matchAny = (arr, value) => arr.some((item) => value.endsWith(item));
+
+const babelInclude = memoize((file) => {
+  if (process.env.BABEL_ENV !== 'production') {
+    // prevent transpile runtime in dev mode
+    return false;
+  }
+
+  const matchPackage = file.match(/^.*[/\\]node_modules[/\\](@.*?[/\\])?.*?[/\\]/);
+  if (!matchPackage) {
+    return false;
+  }
+
+  const matchPackageDir = matchPackage[0];
+  const matchPackageName = matchPackageDir.slice(0, -1);
+
+  if (matchAny(wellKnownBabelExclude, matchPackageName)) {
+    return false;
+  }
+
+  if (matchAny(babelModules.exclude, matchPackageName)) {
+    return false;
+  }
+
+  if (matchAny(babelModules.include, matchPackageName)) {
+    return true;
+  }
+
+  try {
+    const pkg = require(matchPackageDir + 'package.json');
+    return pkg.type === 'module' || fields.esm.some((field) => {
+      if (!pkg[field]) {
+        return false;
+      }
+
+      return paths.moduleFileExtensions.some((ext) => {
+        return pkg[field].endsWith(ext);
+      });
+    });
+  } catch (e) {
+    return false;
+  }
+});
+
 /**
  * @param {'production'|'development'} mode
  */
 module.exports = (mode = 'development', isLegacy = false) => {
-  const isEnvProduction = mode === 'production';
-
   const babel = babelLoader(mode, isLegacy);
 
   return {
@@ -22,6 +71,12 @@ module.exports = (mode = 'development', isLegacy = false) => {
     rules: [{
       parser: {
         requireEnsure: false
+      }
+    }, {
+      test: /\.(c|m)?js/,
+      type: 'javascript/auto',
+      resolve: {
+        fullySpecified: false
       }
     }, {
       oneOf: [{
@@ -45,38 +100,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
         use: babel
       }, {
         test: /\.(js|mjs)$/,
-        include(file) {
-          if (!isEnvProduction) {
-            // prevent transpile runtime in dev mode
-            return;
-          }
-          const matchPackage = file.match(/^.*[/\\]node_modules[/\\](@.*?[/\\])?.*?[/\\]/);
-          if (!matchPackage) {
-            return false;
-          }
-          const matchPackageDir = matchPackage[0];
-          const matchPackageName = matchPackageDir.slice(0, -1);
-          try {
-            if (babelModules.exclude.includes(matchPackageName)) {
-              return false;
-            }
-            if (babelModules.include.includes(matchPackageName)) {
-              return true;
-            }
-            const pkg = require(matchPackageDir + 'package.json');
-            return pkg.type === 'module' || fields.esm.some((field) => {
-              if (!pkg[field]) {
-                return false;
-              }
-
-              return paths.moduleFileExtensions.some((ext) => {
-                return pkg[field].endsWith(ext);
-              });
-            });
-          } catch (e) {
-            return false;
-          }
-        },
+        include: babelInclude,
         use: babel
       }, {
         test: /\.css$/,
