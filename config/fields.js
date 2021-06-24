@@ -1,12 +1,12 @@
 const esm = [
-  // these are generally shipped as a higher ES language level than `module`
+  // non-standard esm
   'modern',
+  'esm',
+  'esnext',
+  // these are generally shipped as a higher ES language level than `module`
   'es2015',
   'esm2015',
   'fesm2015',
-  // non-standard esm
-  'esm',
-  'esnext',
   // current leading de-facto standard
   'module',
   // previous de-facto standard
@@ -19,8 +19,8 @@ const esm = [
 
 const cjs = [
   // standard
-  'browser',
   'main',
+  'browser',
   // fallback
   'umd:main',
   'umd',

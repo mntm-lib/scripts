@@ -34,7 +34,7 @@ module.exports = {
   appTsConfig: resolveApp('tsconfig.json'),
   appBabelModules: resolveApp('babel.modules.json'),
   appNodeModules: resolveApp('node_modules'),
-  publicUrlOrPath: '/',
+  publicUrlOrPath: './',
   moduleFileExtensions,
 
   vkTunnelConfig: resolveApp('vk-tunnel-config.json'),

@@ -23,7 +23,7 @@ module.exports = (allowedHost, host, port) => {
       client: paths.appDevClient
     },
     devMiddleware: {
-      publicPath: paths.publicUrlOrPath.slice(0, -1)
+      publicPath: paths.publicUrlOrPath.slice(1)
     },
     host,
     client: {
