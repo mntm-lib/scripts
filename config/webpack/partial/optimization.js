@@ -22,7 +22,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             ascii_only: isLegacy,
             ecma: isLegacy ? 5 : 2015,
             safari10: true,
-            webkit: isLegacy
+            webkit: true
           },
           parse: {
             ecma: 2020
@@ -59,7 +59,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             passes: isLegacy ? 2 : 4,
             properties: true,
             pure_funcs: null,
-            pure_getters: 'strict',
+            pure_getters: false,
             reduce_funcs: true,
             reduce_vars: true,
             sequences: 0,
@@ -69,9 +69,9 @@ module.exports = (mode = 'development', isLegacy = false) => {
             top_retain: false,
             typeofs: !isLegacy,
             unsafe: false,
-            unsafe_arrows: !isLegacy,
+            unsafe_arrows: false,
             unsafe_comps: !isLegacy,
-            unsafe_Function: !isLegacy,
+            unsafe_Function: false,
             unsafe_math: !isLegacy,
             unsafe_symbols: false,
             unsafe_methods: !isLegacy,
@@ -91,11 +91,15 @@ module.exports = (mode = 'development', isLegacy = false) => {
         }
       }),
       new CSSMinimizerPlugin({
+        parallel: true,
         sourceMap: false,
         minimizerOptions: {
           preset: ['default', {
             minifyFontValues: {
               removeQuotes: false
+            },
+            discardComments: {
+              removeAll: true
             }
           }]
         }
