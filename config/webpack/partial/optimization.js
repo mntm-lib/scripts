@@ -1,11 +1,15 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
+const targets = require('../../targets');
+
 /**
  * @param {'production'|'development'} mode
  */
 module.exports = (mode = 'development', isLegacy = false) => {
   const isEnvProduction = mode === 'production';
+  const target = isLegacy ? 'legacy' : 'modern';
+  const ecma = targets[mode].terser[target];
 
   return {
     minimize: isEnvProduction,
@@ -20,7 +24,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
           format: {
             comments: false,
             ascii_only: isLegacy,
-            ecma: isLegacy ? 5 : 2015,
+            ecma,
             safari10: true,
             webkit: true
           },
@@ -40,7 +44,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             directives: true,
             drop_console: false,
             drop_debugger: true,
-            ecma: isLegacy ? 5 : 2015,
+            ecma,
             evaluate: true,
             expression: false,
             hoist_funs: true,
@@ -76,7 +80,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             unsafe_symbols: false,
             unsafe_methods: !isLegacy,
             unsafe_proto: !isLegacy,
-            unsafe_regexp: !isLegacy,
+            unsafe_regexp: false,
             unsafe_undefined: false,
             unused: true
           },

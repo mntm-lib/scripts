@@ -1,8 +1,11 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const safariPolyfill = '(()=>{var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",e=>{if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()},!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}})()';
+const importInject = '(function(){function t(t,n){var c=document.createElement("script");c.defer=!0,n&&(c.crossOrigin="",c.type="module"),c.src=t,document.head.appendChild(c)}function n(){__LEGACY__.forEach((function(n){t(n,!1)}))}try{if("file:"===location.protocol)n();else{new Function("return import(`data:text/javascript;base64,Cg==`)")().then((function(){__MODERN__.forEach((function(n){t(n,!0)}))})).catch(n)}}catch(t){n()}})()';
 
 const shared = new Set();
+const modern = new Set();
+const legacy = new Set();
 
 class HtmlCrossWebpackPlugin {
   apply(compiler) {
@@ -24,21 +27,25 @@ class HtmlCrossWebpackPlugin {
         hooks.alterAssetTags.tapAsync(
           'HtmlWebpackMultiBuildPlugin',
           (htmlPluginData, callback) => {
-            htmlPluginData.assetTags.scripts.forEach((tag) => {
-              const isModern = tag.attributes.src.includes('/modern/');
-              if (isModern) {
-                tag.attributes.type = 'module';
-                tag.attributes.nomodule = false;
-                return;
+            const inlined = htmlPluginData.assetTags.scripts.filter((tag) => {
+              if (tag.attributes.src) {
+                const isModern = tag.attributes.src.includes('/modern/');
+                if (isModern) {
+                  modern.add(tag.attributes.src);
+                  return false;
+                }
+
+                const isLegacy = tag.attributes.src.includes('/legacy/');
+                if (isLegacy) {
+                  legacy.add(tag.attributes.src);
+                  return false;
+                }
               }
 
-              const isLegacy = tag.attributes.src.includes('/legacy/');
-              if (isLegacy) {
-                tag.attributes.type = 'application/javascript';
-                tag.attributes.nomodule = true;
-                return;
-              }
+              return true;
             });
+
+            htmlPluginData.assetTags.scripts = inlined;
 
             callback(null, htmlPluginData);
           }
@@ -54,6 +61,34 @@ class HtmlCrossWebpackPlugin {
               attributes: {
                 type: 'module'
               }
+            });
+
+            const injectModern = Array.from(modern);
+            const injectLegacy = Array.from(legacy);
+
+            const inject = importInject
+              .replace('__MODERN__', JSON.stringify(injectModern))
+              .replace('__LEGACY__', JSON.stringify(injectLegacy));
+
+            htmlPluginData.bodyTags.push({
+              tagName: 'script',
+              voidTag: false,
+              innerHTML: inject,
+              attributes: {
+                type: 'application/javascript'
+              }
+            });
+
+            injectModern.forEach((src) => {
+              htmlPluginData.headTags.push({
+                tagName: 'link',
+                voidTag: true,
+                attributes: {
+                  rel: 'modulepreload',
+                  href: src,
+                  crossorigin: ''
+                }
+              });
             });
 
             callback(null, htmlPluginData);

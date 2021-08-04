@@ -1,6 +1,6 @@
 {
   "name": "@mntm/scripts",
-  "version": "3.0.0-beta.10",
+  "version": "3.0.0-beta.13",
   "author": {
     "name": "Anton Petrov",
     "email": "im@petrov.engineer",
@@ -27,20 +27,20 @@
     "mntm-scripts": "node ./bin/mntm-scripts.js"
   },
   "dependencies": {
-    "@babel/core": "^7.14.6",
+    "@babel/core": "^7.14.8",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.14.5",
     "@babel/plugin-proposal-numeric-separator": "^7.14.5",
     "@babel/plugin-proposal-optional-chaining": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.14.5",
-    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-env": "^7.14.9",
     "@babel/preset-react": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
-    "@babel/runtime": "^7.14.6",
+    "@babel/runtime": "^7.14.8",
     "@prefresh/babel-plugin": "^0.4.1",
     "@prefresh/core": "^1.3.2",
     "@prefresh/utils": "^1.1.1",
-    "@prefresh/webpack": "^3.3.0",
+    "@prefresh/webpack": "^3.3.2",
     "@svgr/webpack": "^5.5.0",
     "@vkontakte/vk-miniapps-deploy": "^0.0.25",
     "@vkontakte/vk-tunnel": "^0.1.0",
@@ -48,12 +48,12 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-named-asset-import": "~0.3.7",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "browserslist": "~4.16.6",
-    "chalk": "~4.1.1",
-    "core-js": "^3.15.1",
+    "browserslist": "~4.16.7",
+    "chalk": "~4.1.2",
+    "core-js": "^3.16.0",
     "cross-spawn": "~7.0.3",
-    "css-loader": "^5.2.6",
-    "css-minimizer-webpack-plugin": "^3.0.1",
+    "css-loader": "^5.2.7",
+    "css-minimizer-webpack-plugin": "^3.0.2",
     "detect-port-alt": "~1.1.6",
     "dotenv": "^8.6.0",
     "dotenv-expand": "~5.1.0",
@@ -61,45 +61,45 @@
     "fast-async": "^6.3.8",
     "file-loader": "~6.2.0",
     "filesize": "~6.3.0",
-    "fork-ts-checker-webpack-plugin": "7.0.0-alpha.3",
+    "fork-ts-checker-webpack-plugin": "7.0.0-alpha.4",
     "fs-extra": "^10.0.0",
     "gzip-size": "~6.0.0",
     "html-webpack-plugin": "^5.3.2",
     "is-root": "^2.1.0",
-    "mini-css-extract-plugin": "^1.6.0",
+    "mini-css-extract-plugin": "^2.1.0",
     "module-alias": "~2.2.2",
     "open": "^8.2.1",
-    "postcss": "^8.3.5",
+    "postcss": "^8.3.6",
     "postcss-csso": "^5.0.1",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^14.0.2",
-    "postcss-loader": "^6.1.0",
-    "postcss-nested": "^5.0.5",
+    "postcss-loader": "^6.1.1",
+    "postcss-nested": "^5.0.6",
     "postcss-preset-env": "^6.7.0",
     "postcss-safe-parser": "^6.0.0",
     "resolve": "^1.20.0",
     "shell-quote": "~1.7.2",
     "strip-ansi": "^6.0.0",
-    "style-loader": "~2.0.0",
-    "terser": "^5.7.0",
-    "terser-webpack-plugin": "^5.1.3",
+    "style-loader": "^2.0.0",
+    "terser": "^5.7.1",
+    "terser-webpack-plugin": "^5.1.4",
     "url-loader": "~4.1.1",
-    "webpack": "^5.40.0",
+    "webpack": "^5.48.0",
     "webpack-dev-middleware": "^5.0.0",
     "webpack-dev-server": "4.0.0-beta.3"
   },
   "devDependencies": {
-    "@types/node": "^15.12.4",
+    "@types/node": "^16.4.10",
     "@types/webpack": "^5.28.0",
-    "@types/webpack-dev-middleware": "^5.0.0",
-    "eslint": "^7.29.0",
+    "@types/webpack-dev-middleware": "^5.0.1",
+    "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0"
   },
   "peerDependencies": {
     "@mntm/react": "^17.0.7",
-    "preact": "^10.5.13",
-    "typescript": "^4.3.4"
+    "preact": "^10.5.14",
+    "typescript": "^4.3.5"
   },
   "peerDependenciesMeta": {
     "preact": {
@@ -110,6 +110,6 @@
     }
   },
   "engines": {
-    "node": "^12.16.0"
+    "node": "^12.16.0 || ^14.17.0"
   }
 }

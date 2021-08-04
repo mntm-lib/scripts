@@ -1,5 +1,9 @@
 module.exports = {
   development: {
+    terser: {
+      modern: 2020,
+      legacy: 2020
+    },
     babel: {
       modern: {
         chrome: '90',
@@ -13,9 +17,17 @@ module.exports = {
     postcss: 'chrome >= 90, safari >= 14'
   },
   production: {
+    terser: {
+      modern: 2018,
+      legacy: 5
+    },
     babel: {
       modern: {
-        esmodules: true
+        chrome: '63',
+        safari: '11.1',
+        ios: '11.3',
+        edge: '79',
+        firefox: '67'
       },
       legacy: {
         chrome: '30',
