@@ -1,7 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 
-const paths = require('../../../paths');
 const targets = require('../../../targets');
 
 /**
@@ -12,9 +11,9 @@ module.exports = (mode = 'development') => {
 
   const emit = isEnvProduction ? {
     loader: MiniCssExtractPlugin.loader,
-    options: paths.publicUrlOrPath.startsWith('.') ? {
-      publicPath: '../../'
-    } : {}
+    options: {
+      publicPath: '../'
+    }
   } : require.resolve('style-loader');
 
   const loaders = [emit, {
@@ -26,12 +25,13 @@ module.exports = (mode = 'development') => {
   }, {
     loader: require.resolve('postcss-loader'),
     options: {
+      implementation: require.resolve('postcss'),
       sourceMap: !isEnvProduction,
       postcssOptions: {
         parser: safePostCssParser,
         plugins: [
           require('postcss-nested'),
-          require('postcss-import'),
+          require('postcss-easy-import'),
           require('postcss-flexbugs-fixes'),
           require('postcss-preset-env')({
             browsers: targets[mode].postcss

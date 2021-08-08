@@ -31,15 +31,19 @@ module.exports = (mode = 'development', isLegacy = false) => {
         path
           .resolve(info.absoluteResourcePath)
           .replace(/\\/g, '/')),
-    chunkLoading: 'jsonp',
+    module: !isLegacy,
+    library: {
+      type: isLegacy ? 'window' : 'module'
+    },
     chunkLoadingGlobal: 'mntm',
+    crossOriginLoading: isLegacy ? false : 'anonymous',
     globalObject: 'window',
     environment: {
       arrowFunction: !isLegacy,
       bigIntLiteral: false,
       const: false,
       destructuring: false,
-      dynamicImport: false,
+      dynamicImport: !isLegacy,
       forOf: !isLegacy,
       module: !isLegacy
     }

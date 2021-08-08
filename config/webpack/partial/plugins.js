@@ -5,8 +5,11 @@ const paths = require('../../paths');
 const env = require('../../env');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const FaviconHtmlWebpackPlugin = require('../plugins/html-favicon-webpack-plugin');
 const CrossHtmlWebpackPlugin = require('../plugins/html-cross-webpack-plugin');
+const HtmlModuleWebpackPlugin = require('../plugins/html-module-webpack-plugin');
+
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const PreactRefreshWebpackPlugin = require('@prefresh/webpack');
@@ -21,12 +24,16 @@ module.exports = (mode = 'development') => {
       new FaviconHtmlWebpackPlugin(),
       new CrossHtmlWebpackPlugin()
     );
+  } else {
+    plugins.push(
+      new HtmlModuleWebpackPlugin()
+    );
   }
 
   plugins.push(
     new HtmlWebpackPlugin({
       inject: 'body',
-      scriptLoading: 'defer',
+      scriptLoading: 'blocking',
       chunksSortMode: 'none',
       template: paths.appTemplate,
       minify: isEnvProduction
@@ -41,7 +48,8 @@ module.exports = (mode = 'development') => {
     plugins.push(
       new MiniCssExtractPlugin({
         filename: 'style/[name].[contenthash:8].css',
-        chunkFilename: 'style/[name].[chunkhash:8].chunk.css'
+        chunkFilename: 'style/[name].[chunkhash:8].chunk.css',
+        experimentalUseImportModule: true
       })
     );
   } else {
