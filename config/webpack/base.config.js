@@ -5,6 +5,7 @@ const getOptimization = require('./partial/optimization');
 const getResolve = require('./partial/resolve');
 const getModule = require('./partial/module');
 const getPlugins = require('./partial/plugins');
+const getCache = require('./partial/cache');
 
 module.exports = (mode = 'development', isLegacy = false) => {
   const isEnvProduction = mode === 'production';
@@ -15,10 +16,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     entry: paths.appIndexJs,
     performance: false,
     infrastructureLogging: {
-      level: 'info',
-      debug: (name) => {
-        return name !== 'webpack-dev-middleware';
-      }
+      level: 'none'
     },
     devtool: isEnvProduction ? false : 'eval-cheap-module-source-map',
     output: getOutput(mode, isLegacy),
@@ -26,6 +24,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     resolve: getResolve(),
     module: getModule(mode, isLegacy),
     plugins: getPlugins(mode, isLegacy),
+    cache: getCache(mode, isLegacy),
     target: isLegacy ? ['web', 'es5'] : ['web', 'es2015'],
     experiments: {
       outputModule: !isLegacy

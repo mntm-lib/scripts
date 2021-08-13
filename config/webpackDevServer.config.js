@@ -2,7 +2,6 @@ const ignoredFiles = require('../lib/ignoredFiles');
 
 const paths = require('./paths');
 
-const evalSourceMapMiddleware = require('../middlewares/evalSourceMapMiddleware');
 const noopServiceWorkerMiddleware = require('../middlewares/noopServiceWorkerMiddleware');
 const redirectServedPath = require('../middlewares/redirectServedPathMiddleware');
 
@@ -28,9 +27,7 @@ module.exports = (allowedHost, host, port) => {
     host,
     client: {
       port,
-      overlay: false,
-      needClientEntry: true,
-      needHotEntry: true
+      overlay: false
     },
     https: false,
     http2: false,
@@ -39,9 +36,6 @@ module.exports = (allowedHost, host, port) => {
       index: paths.publicUrlOrPath
     },
     public: allowedHost,
-    onBeforeSetupMiddleware(app, server) {
-      app.use(evalSourceMapMiddleware(server));
-    },
     onAfterSetupMiddleware(app) {
       app.use(redirectServedPath(paths.publicUrlOrPath));
       app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));

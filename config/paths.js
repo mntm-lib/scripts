@@ -6,6 +6,7 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const appTemplate = path.resolve(__dirname, './template/index.html');
 const appDevClient = path.resolve(__dirname, '../lib/WebpackDevServerClient.js');
+const appBaseConfig = path.resolve(__dirname, './webpack/base.config.js');
 
 const moduleFileExtensions = ['mjs', 'js', 'jsx', 'json', 'ts', 'tsx'];
 
@@ -24,6 +25,8 @@ const resolveModule = (resolveFn, filePath, extensions) => {
 module.exports = {
   appTemplate,
   appDevClient,
+  appBaseConfig,
+
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
@@ -34,7 +37,10 @@ module.exports = {
   appTsConfig: resolveApp('tsconfig.json'),
   appBabelModules: resolveApp('babel.modules.json'),
   appNodeModules: resolveApp('node_modules'),
+  appWebpackCache: resolveApp('node_modules/.cache'),
+  appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
   publicUrlOrPath: './',
+
   moduleFileExtensions,
 
   vkTunnelConfig: resolveApp('vk-tunnel-config.json'),

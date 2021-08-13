@@ -64,6 +64,8 @@ const babelInclude = memoize((file) => {
  * @param {'production'|'development'} mode
  */
 module.exports = (mode = 'development', isLegacy = false) => {
+  const isEnvProduction = mode === 'production';
+
   const babel = babelLoader(mode, isLegacy);
 
   return {
@@ -81,20 +83,47 @@ module.exports = (mode = 'development', isLegacy = false) => {
     }, {
       oneOf: [{
         test: [/\.avif$/],
-        loader: require.resolve('url-loader'),
-        options: {
-          limit: 0,
-          mimetype: 'image/avif',
-          name: 'static/media/[name].[hash:8].[ext]'
+        type: 'asset',
+        mimetype: 'image/avif',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 0
+          }
         }
       }, {
         test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-        loader: require.resolve('url-loader'),
-        options: {
-          limit: 0,
-          name: 'static/media/[name].[hash:8].[ext]'
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 0
+          }
         }
       }, {
+        test: /\.svg$/,
+        use: [{
+          loader: '@svgr/webpack',
+          options: {
+            prettier: false,
+            svgo: isEnvProduction,
+            svgoConfig: {
+              plugins: [{
+                removeViewBox: false
+              }]
+            },
+            ref: true,
+            memo: true
+          }
+        }, {
+          loader: 'file-loader',
+          options: {
+            name: 'static/media/[name].[hash].[ext]'
+          }
+        }],
+        issuer: {
+          and: [/\.(ts|tsx|js|jsx|md|mdx)$/]
+        },
+        type: 'javascript/auto'
+      },  {
         test: /\.(js|mjs|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: babel
@@ -107,11 +136,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
         use: styleLoader(mode),
         sideEffects: true
       }, {
-        loader: require.resolve('file-loader'),
-        exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
-        options: {
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
+        exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+        type: 'asset/resource'
       }]
     }]
   };

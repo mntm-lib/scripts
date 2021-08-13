@@ -17,10 +17,11 @@ module.exports = (mode = 'development', isLegacy = false) => {
     '/[name].chunk.js';
 
   return {
-    path: isEnvProduction ? paths.appBuild : undefined,
+    path: paths.appBuild,
     pathinfo: !isEnvProduction,
     filename: target + baseFilename,
     chunkFilename: target + baseChunkFilename,
+    assetModuleFilename: 'static/media/[name].[hash:8][ext]',
     publicPath: paths.publicUrlOrPath,
     devtoolModuleFilenameTemplate: isEnvProduction ?
       (info =>

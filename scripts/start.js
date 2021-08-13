@@ -49,19 +49,10 @@ Promise.resolve()
       PORT,
       paths.publicUrlOrPath.slice(0, -1)
     );
-    const devSocket = {
-      warnings(warnings) {
-        devServer.sockWrite(devServer.sockets, 'warnings', warnings);
-      },
-      errors(errors) {
-        devServer.sockWrite(devServer.sockets, 'errors', errors);
-      }
-    };
     // Create a webpack compiler that is configured with custom messages.
     const compiler = createCompiler({
       appName,
       config,
-      devSocket,
       urls,
       webpack
     });

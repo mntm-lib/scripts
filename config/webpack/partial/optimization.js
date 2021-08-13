@@ -51,7 +51,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             hoist_props: true,
             hoist_vars: false,
             if_return: true,
-            inline: 3,
+            inline: 2,
             join_vars: true,
             keep_classnames: false,
             keep_fargs: false,
@@ -109,8 +109,17 @@ module.exports = (mode = 'development', isLegacy = false) => {
       })
     ],
     splitChunks: {
-      automaticNameDelimiter: '_',
       chunks: 'all',
+      automaticNameDelimiter: '_',
+      cacheGroups: {
+        framework: {
+          chunks: 'all',
+          name: 'framework',
+          test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|preact|preact-compat|@vkontakte|@mntm)[\\/]/,
+          priority: 40,
+          enforce: true
+        }
+      },
       hidePathInfo: isEnvProduction,
       name: false
     },

@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const resolve = require('resolve');
 
 const paths = require('../../paths');
 const env = require('../../env');
@@ -10,8 +9,9 @@ const FaviconHtmlWebpackPlugin = require('../plugins/html-favicon-webpack-plugin
 const CrossHtmlWebpackPlugin = require('../plugins/html-cross-webpack-plugin');
 const HtmlModuleWebpackPlugin = require('../plugins/html-module-webpack-plugin');
 
+const TypescriptCheckerPlugin = require('../plugins/typescript-checker-plugin');
+
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const PreactRefreshWebpackPlugin = require('@prefresh/webpack');
 
 module.exports = (mode = 'development') => {
@@ -56,19 +56,7 @@ module.exports = (mode = 'development') => {
     plugins.push(
       new webpack.HotModuleReplacementPlugin(),
       new PreactRefreshWebpackPlugin(),
-      new ForkTsCheckerWebpackPlugin({
-        typescript: {
-          enabled: true,
-          build: false,
-          mode: 'write-references',
-          configFile: paths.appTsConfig,
-          typescriptPath: resolve.sync('typescript', {
-            basedir: paths.appNodeModules
-          })
-        },
-        async: true,
-        formatter: 'basic'
-      })
+      new TypescriptCheckerPlugin()
     );
   }
 

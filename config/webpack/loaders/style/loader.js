@@ -1,5 +1,4 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const safePostCssParser = require('postcss-safe-parser');
 
 const targets = require('../../../targets');
 
@@ -28,14 +27,15 @@ module.exports = (mode = 'development') => {
       implementation: require.resolve('postcss'),
       sourceMap: !isEnvProduction,
       postcssOptions: {
-        parser: safePostCssParser,
+        config: false,
+        ident: 'postcss',
         plugins: [
-          require('postcss-nested'),
-          require('postcss-easy-import'),
-          require('postcss-flexbugs-fixes'),
-          require('postcss-preset-env')({
+          'postcss-nested',
+          'postcss-easy-import',
+          'postcss-flexbugs-fixes',
+          ['postcss-preset-env', {
             browsers: targets[mode].postcss
-          })
+          }]
         ]
       }
     }
