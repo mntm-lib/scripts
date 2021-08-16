@@ -28,16 +28,20 @@ class HtmlCrossWebpackPlugin {
           'HtmlWebpackMultiBuildPlugin',
           (htmlPluginData, callback) => {
             const inlined = htmlPluginData.assetTags.scripts.filter((tag) => {
-              if (tag.attributes.src) {
+              if (typeof tag.attributes.src === 'string') {
                 const isModern = tag.attributes.src.includes('/modern/');
+
                 if (isModern) {
                   modern.add(tag.attributes.src);
+
                   return false;
                 }
 
                 const isLegacy = tag.attributes.src.includes('/legacy/');
+
                 if (isLegacy) {
                   legacy.add(tag.attributes.src);
+
                   return false;
                 }
               }
@@ -55,6 +59,9 @@ class HtmlCrossWebpackPlugin {
           'HtmlWebpackMultiBuildPlugin',
           (htmlPluginData, callback) => {
             htmlPluginData.headTags.push({
+              meta: {
+                plugin: 'HtmlWebpackMultiBuildPlugin'
+              },
               tagName: 'script',
               voidTag: false,
               innerHTML: safariPolyfill,
@@ -66,11 +73,14 @@ class HtmlCrossWebpackPlugin {
             const injectModern = Array.from(modern);
             const injectLegacy = Array.from(legacy);
 
-            const inject = importInject
-              .replace('__MODERN__', JSON.stringify(injectModern))
-              .replace('__LEGACY__', JSON.stringify(injectLegacy));
+            const inject = importInject.
+              replace('__MODERN__', JSON.stringify(injectModern)).
+              replace('__LEGACY__', JSON.stringify(injectLegacy));
 
             htmlPluginData.bodyTags.push({
+              meta: {
+                plugin: 'HtmlWebpackMultiBuildPlugin'
+              },
               tagName: 'script',
               voidTag: false,
               innerHTML: inject,
@@ -81,6 +91,9 @@ class HtmlCrossWebpackPlugin {
 
             injectModern.forEach((src) => {
               htmlPluginData.headTags.push({
+                meta: {
+                  plugin: 'HtmlWebpackMultiBuildPlugin'
+                },
                 tagName: 'link',
                 voidTag: true,
                 attributes: {

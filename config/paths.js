@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 
 const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
 const appTemplate = path.resolve(__dirname, './template/index.html');
 const appDevClient = path.resolve(__dirname, '../lib/WebpackDevServerClient.js');
@@ -11,9 +11,8 @@ const appBaseConfig = path.resolve(__dirname, './webpack/base.config.js');
 const moduleFileExtensions = ['mjs', 'js', 'jsx', 'json', 'ts', 'tsx'];
 
 const resolveModule = (resolveFn, filePath, extensions) => {
-  const extension = extensions.find(extension =>
-    fs.existsSync(resolveFn(`${filePath}.${extension}`))
-  );
+  const extension = extensions.find((ext) =>
+    fs.existsSync(resolveFn(`${filePath}.${ext}`)));
 
   if (extension) {
     return resolveFn(`${filePath}.${extension}`);

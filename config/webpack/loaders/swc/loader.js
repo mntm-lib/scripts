@@ -9,17 +9,15 @@ module.exports = (mode = 'development', isLegacy = false) => {
   return {
     loader: require.resolve('./implementation'),
     options: {
+      swcrc: false,
+      swcrcRoots: false,
+      configFile: false,
       jsc: {
         loose: true,
-        dynamicImport: true,
-        target: targets[mode].swc[target],
-        externalHelpers: true,
-        privateMethod: true,
-        classPrivateProperty: true
+        target: targets[mode].swc[target]
       },
       env: {
         loose: true,
-        dynamicImport: true,
         target: targets[mode].babel[target],
         mode: 'usage',
         coreJs: 3

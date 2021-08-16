@@ -34,6 +34,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
           compress: {
             defaults: true,
             arrows: !isLegacy,
+
+            // @ts-expect-error wrong typing
             arguments: true,
             booleans_as_integers: false,
             collapse_vars: true,
@@ -111,15 +113,39 @@ module.exports = (mode = 'development', isLegacy = false) => {
     splitChunks: {
       chunks: 'all',
       automaticNameDelimiter: '_',
-      cacheGroups: {
+      cacheGroups: Object.assign(isEnvProduction ?
+        {} :
+        {
+          hmr: {
+            chunks: 'all',
+            name: 'hmr',
+            test: /(?<!node_modules.*)[/\\]node_modules[/\\](react-refresh|react-hot-loader|@prefresh|@hot-loader|@pmmmwh|webpack|webpack-dev-server)[/\\]/,
+            priority: 50,
+            enforce: true
+          }
+        }, {
+        polyfills: {
+          chunks: 'all',
+          name: 'polyfills',
+          test: /(?<!node_modules.*)[/\\]node_modules[/\\](core-js|core-js-pure|core-js-compat|@babel|@swc|regenerate|regenerator-runtime|object-assign|es6-object-assign|raf|blueimp-canvas-to-blob|ssr-window|@mntm\/polyfill|@webcomponents([\w-]*promise[\w-]*)|([\w-]*fetch[\w-]*)|([\w-]*polyfill[\w-]*))[/\\]/,
+          priority: 40,
+          enforce: true
+        },
+        render: {
+          chunks: 'all',
+          name: 'render',
+          test: /(?<!node_modules.*)[/\\]node_modules[/\\](react|react-dom|react-reconciler|react-is|scheduler|prop-types|preact|preact-compat|preact-iso|@mntm\/react|style-loader|css-loader|postcss-loader|@svgr|svg-baker-runtime)[/\\]/,
+          priority: 30,
+          enforce: true
+        },
         framework: {
           chunks: 'all',
           name: 'framework',
-          test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|preact|preact-compat|@vkontakte|@mntm)[\\/]/,
-          priority: 40,
+          test: /(?<!node_modules.*)[/\\]node_modules[/\\](@vkontakte\/vkui|@vkontakte\/icons|@vkontakte\/vkjs|@vkontakte\/vk-bridge|@mntm\/vkui|@mntm\/icons|@mntm\/painless-bridge|@popperjs|react-popper)[/\\]/,
+          priority: 20,
           enforce: true
         }
-      },
+      }),
       hidePathInfo: isEnvProduction,
       name: false
     },

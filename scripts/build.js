@@ -1,8 +1,10 @@
+// @ts-expect-error module
 require('../lib/unhandled');
 require('../lib/paths');
 
 // Do this as the first thing so that any code reading it knows the right env.
 const env = require('../lib/env');
+
 env.fallback('development');
 
 const chalk = require('chalk');
@@ -15,34 +17,74 @@ const size = require('../lib/size');
 const printBuildError = require('../lib/printBuildError');
 const execBin = require('../lib/bin');
 
+const build = async () => {
+  return new Promise((resolve, reject) => {
+    // @ts-expect-error wrong typing
+    webpack(configFactory, (err, stats) => {
+      const raw = {
+        errors: [],
+        warnings: []
+      };
+
+      if (stats) {
+        const info = stats.toJson({ all: false, warnings: true, errors: true });
+
+        raw.errors.push.apply(raw.errors, info.errors);
+        raw.warnings.push.apply(raw.warnings, info.warnings);
+      }
+
+      if (err) {
+        raw.errors.push(err);
+      }
+
+      const formatted = formatWebpackMessages(raw);
+
+      if (formatted.errors.length > 0) {
+        reject(new Error(formatted.errors.join('\n\n')));
+
+        return;
+      }
+
+      resolve({
+        stats,
+        warnings: formatted.warnings
+      });
+    });
+  });
+};
+
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
-Promise.resolve()
-  .then(() => {
+Promise.resolve().
+  then(async () => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
     fs.emptyDirSync(paths.appBuild);
+
     // Merge with the public folder
     fs.copySync(paths.appPublic, paths.appBuild, {
       dereference: true
     });
+
     // Start the webpack build
+    console.log('Creating an optimized production build...');
+
     return build();
-  })
-  .then(
+  }).
+  then(
     ({ stats, warnings }) => {
-      if (warnings.length) {
+      if (warnings.length > 0) {
         console.log(chalk.yellow('Compiled with warnings.\n'));
         console.log(warnings.join('\n\n'));
         console.log(
-          '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
-            ' to learn more about each warning.'
+          `\nSearch for the ${
+            chalk.underline(chalk.yellow('keywords'))
+          } to learn more about each warning.`
         );
         console.log(
-          'To ignore, add ' +
-            chalk.cyan('// eslint-disable-next-line') +
-            ' to the line before.\n'
+          `To ignore, add ${
+            chalk.cyan('// eslint-disable-next-line')
+          } to the line before.\n`
         );
       } else {
         console.log(chalk.green('Compiled successfully.\n'));
@@ -53,81 +95,32 @@ Promise.resolve()
         paths.appBuild
       );
     },
-    err => {
+    (ex) => {
       console.log(
-        chalk.yellow(
-          'Compiled with the following type errors (you may want to check these before deploying your app):\n'
+        chalk.red(
+          'Compilation failed:\n'
         )
       );
-      printBuildError(err);
+      printBuildError(ex);
+      process.exit(1);
     }
-  )
-  .then(() => {
+  ).
+  then(() => {
     if (fs.existsSync(paths.vkDeployConfig)) {
       execBin('@vkontakte/vk-miniapps-deploy');
     } else {
       console.log(
-        chalk.yellow(
+        `${chalk.yellow(
           'Deploy config not found.'
-        ) + ' ' + chalk.grey(
+        )} ${chalk.grey(
           'See: https://github.com/VKCOM/vk-miniapps-deploy'
-        )
+        )}`
       );
     }
-  })
-  .catch(err => {
-    if (err && err.message) {
-      console.log(err.message);
+  }).
+  catch((ex) => {
+    if (ex && ex.message) {
+      console.log(ex.message);
     }
     process.exit(1);
   });
-
-// Create the production build and print the deployment instructions.
-function build() {
-  console.log('Creating an optimized production build...');
-
-  const compiler = webpack(configFactory);
-  return new Promise((resolve, reject) => {
-    compiler.run((err, stats) => {
-      let messages;
-      if (err) {
-        if (!err.message) {
-          return reject(err);
-        }
-
-        let errMessage = err.message;
-
-        // Add additional information for postcss errors
-        if (Object.prototype.hasOwnProperty.call(err, 'postcssNode')) {
-          errMessage +=
-            '\nCompileError: Begins at CSS selector ' +
-            err['postcssNode'].selector;
-        }
-
-        messages = formatWebpackMessages({
-          errors: [{ message: errMessage }],
-          warnings: []
-        });
-      } else {
-        messages = formatWebpackMessages(
-          stats.toJson({ all: false, warnings: true, errors: true })
-        );
-      }
-      if (messages.errors.length) {
-        // Only keep the first error. Others are often indicative
-        // of the same problem, but confuse the reader with noise.
-        if (messages.errors.length > 1) {
-          messages.errors.length = 1;
-        }
-        return reject(new Error(messages.errors.join('\n\n')));
-      }
-
-      const resolveArgs = {
-        stats,
-        warnings: messages.warnings
-      };
-
-      return resolve(resolveArgs);
-    });
-  });
-}

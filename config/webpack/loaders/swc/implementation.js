@@ -1,11 +1,14 @@
 const loaderUtils = require('loader-utils');
 const swc = require('@swc/core');
 
-module.exports = async function (source, inputSourceMap) {
+/**
+ * @this {any}
+ */
+module.exports = async function(source, inputSourceMap) {
   // Make the loader async
   const callback = this.async();
 
-  let loaderOptions = loaderUtils.getOptions(this) || {};
+  const loaderOptions = loaderUtils.getOptions(this) || {};
 
   const programmaticOptions = {
     filename: this.resourcePath,
@@ -28,26 +31,37 @@ module.exports = async function (source, inputSourceMap) {
     programmaticOptions.inputSourceMap = JSON.stringify(inputSourceMap);
   }
 
-  programmaticOptions.jsc = loaderOptions.jsc || {};
-  programmaticOptions.jsc.parser = loaderOptions.jsc.parser || {};
-  programmaticOptions.jsc.transform = loaderOptions.jsc.transform || {};
+  programmaticOptions.env = Object.assign({}, loaderOptions.env);
+  programmaticOptions.env.dynamicImport = true;
 
-  // detect syntax
+  programmaticOptions.jsc = Object.assign({}, loaderOptions.jsc);
+  programmaticOptions.jsc.parser = Object.assign({}, loaderOptions.jsc.parser);
+  programmaticOptions.jsc.transform = Object.assign({}, loaderOptions.jsc.transform);
+
+  // Detect syntax
   if (
     this.resourcePath.endsWith('.ts') ||
     this.resourcePath.endsWith('.tsx')
   ) {
     programmaticOptions.jsc.parser.syntax = 'typescript';
+
+    // Consist with ecmascript
+    programmaticOptions.jsc.parser.dynamicImport = true;
   } else {
     programmaticOptions.jsc.parser.syntax = 'ecmascript';
   }
 
-  // detect jsx
+  // Detect jsx
   if (
     this.resourcePath.endsWith('.jsx') ||
     this.resourcePath.endsWith('.tsx')
   ) {
-    programmaticOptions.jsc.parser.jsx = true;
+    if (programmaticOptions.jsc.parser.syntax === 'typescript') {
+      programmaticOptions.jsc.parser.tsx = true;
+    } else {
+      programmaticOptions.jsc.parser.jsx = true;
+    }
+
     programmaticOptions.jsc.transform.react = {
       runtime: 'automatic'
     };
@@ -59,28 +73,36 @@ module.exports = async function (source, inputSourceMap) {
         refreshSig: '$RefreshSig$',
         emitFullSignatures: true
       };
+    } else {
+      programmaticOptions.jsc.transform.react.development = false;
+      programmaticOptions.jsc.transform.react.refresh = false;
     }
+  } else if (programmaticOptions.jsc.parser.syntax === 'typescript') {
+    programmaticOptions.jsc.parser.tsx = false;
   } else {
     programmaticOptions.jsc.parser.jsx = false;
   }
 
-  // overwrite cuz we need plugin to minimize
-  programmaticOptions.jsc.minify = false;
-  programmaticOptions.jsc.transform.optimizer = this.mode === 'development';
+  // Unstable implementation
+  programmaticOptions.jsc.minify = null;
+
+  if (this.mode === 'development') {
+    programmaticOptions.jsc.transform.optimizer = null;
+  } else {
+    programmaticOptions.jsc.transform.optimizer = Object.assign({}, programmaticOptions.jsc.transform.optimizer);
+  }
 
   try {
     const output = await swc.transform(source, programmaticOptions);
 
-    callback(
+    return callback(
       null,
       output.code,
       output.map && JSON.parse(output.map)
     );
-  } catch (err) {
-    callback(
-      err,
-      null,
-      null
+  } catch (ex) {
+    return callback(
+      ex
     );
   }
 };

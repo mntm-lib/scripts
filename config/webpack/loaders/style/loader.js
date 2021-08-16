@@ -8,14 +8,16 @@ const targets = require('../../../targets');
 module.exports = (mode = 'development') => {
   const isEnvProduction = mode === 'production';
 
-  const emit = isEnvProduction ? {
-    loader: MiniCssExtractPlugin.loader,
-    options: {
-      publicPath: '../'
-    }
-  } : require.resolve('style-loader');
+  const emit = isEnvProduction ?
+    {
+      loader: MiniCssExtractPlugin.loader,
+      options: {
+        publicPath: '../'
+      }
+    } :
+    require.resolve('style-loader');
 
-  const loaders = [emit, {
+  return [emit, {
     loader: require.resolve('css-loader'),
     options: {
       importLoaders: 1,
@@ -40,6 +42,4 @@ module.exports = (mode = 'development') => {
       }
     }
   }];
-
-  return loaders;
 };

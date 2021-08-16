@@ -24,14 +24,14 @@ module.exports = (mode = 'development', isLegacy = false) => {
     assetModuleFilename: 'static/media/[name].[hash:8][ext]',
     publicPath: paths.publicUrlOrPath,
     devtoolModuleFilenameTemplate: isEnvProduction ?
-      (info =>
-        path
-          .relative(paths.appSrc, info.absoluteResourcePath)
-          .replace(/\\/g, '/')) :
-      (info =>
-        path
-          .resolve(info.absoluteResourcePath)
-          .replace(/\\/g, '/')),
+      (info) =>
+        path.
+          relative(paths.appSrc, info.absoluteResourcePath).
+          replaceAll('\\', '/') :
+      (info) =>
+        path.
+          resolve(info.absoluteResourcePath).
+          replaceAll('\\', '/'),
     module: !isLegacy,
     library: {
       type: isLegacy ? 'window' : 'module'

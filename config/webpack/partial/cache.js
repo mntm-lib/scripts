@@ -4,13 +4,18 @@ const path = require('path');
 const paths = require('../../paths');
 const env = require('../../env');
 
-const createEnvironmentHash = (env) => {
+const createEnvironmentHash = (from) => {
   const hash = crypto.createHash('md5');
-  hash.update(JSON.stringify(env));
+
+  hash.update(JSON.stringify(from));
+
   return hash.digest('hex');
 };
 
-module.exports = (_, isLegacy = false) => {
+/**
+ * @param {'production'|'development'} mode
+ */
+module.exports = (mode, isLegacy = false) => {
   const type = isLegacy ? 'legacy' : 'modern';
 
   return {

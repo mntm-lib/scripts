@@ -14,6 +14,9 @@ const TypescriptCheckerPlugin = require('../plugins/typescript-checker-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PreactRefreshWebpackPlugin = require('@prefresh/webpack');
 
+/**
+ * @param {'production'|'development'} mode
+ */
 module.exports = (mode = 'development') => {
   const isEnvProduction = mode === 'production';
 
@@ -34,6 +37,8 @@ module.exports = (mode = 'development') => {
     new HtmlWebpackPlugin({
       inject: 'body',
       scriptLoading: 'blocking',
+
+      // @ts-expect-error wrong typing
       chunksSortMode: 'none',
       template: paths.appTemplate,
       minify: isEnvProduction

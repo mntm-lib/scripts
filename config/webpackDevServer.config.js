@@ -5,9 +5,9 @@ const paths = require('./paths');
 const noopServiceWorkerMiddleware = require('../middlewares/noopServiceWorkerMiddleware');
 const redirectServedPath = require('../middlewares/redirectServedPathMiddleware');
 
-module.exports = (allowedHost, host, port) => {
+module.exports = (host, port) => {
   return {
-    firewall: false,
+    allowedHosts: 'all',
     compress: false,
     static: [{
       directory: paths.appPublic,
@@ -18,16 +18,14 @@ module.exports = (allowedHost, host, port) => {
       }
     }],
     hot: true,
-    transportMode: {
-      client: paths.appDevClient
-    },
     devMiddleware: {
       publicPath: paths.publicUrlOrPath.slice(1)
     },
     host,
+    port,
     client: {
-      port,
-      overlay: false
+      overlay: false,
+      webSocketTransport: paths.appDevClient
     },
     https: false,
     http2: false,
@@ -35,7 +33,6 @@ module.exports = (allowedHost, host, port) => {
       disableDotRule: true,
       index: paths.publicUrlOrPath
     },
-    public: allowedHost,
     onAfterSetupMiddleware(app) {
       app.use(redirectServedPath(paths.publicUrlOrPath));
       app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));

@@ -20,11 +20,12 @@ const matchAny = (arr, value) => arr.some((item) => value.endsWith(item));
 
 const babelInclude = memoize((file) => {
   if (process.env.BABEL_ENV !== 'production') {
-    // prevent transpile runtime in dev mode
+    // Prevent transpile runtime in dev mode
     return false;
   }
 
   const matchPackage = file.match(/^.*[/\\]node_modules[/\\](@.*?[/\\])?.*?[/\\]/);
+
   if (!matchPackage) {
     return false;
   }
@@ -45,7 +46,8 @@ const babelInclude = memoize((file) => {
   }
 
   try {
-    const pkg = require(matchPackageDir + 'package.json');
+    const pkg = require(`${matchPackageDir}package.json`);
+
     return pkg.type === 'module' || fields.esm.some((field) => {
       if (!pkg[field]) {
         return false;
@@ -55,7 +57,7 @@ const babelInclude = memoize((file) => {
         return pkg[field].endsWith(ext);
       });
     });
-  } catch (e) {
+  } catch {
     return false;
   }
 });
@@ -123,7 +125,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
           and: [/\.(ts|tsx|js|jsx|md|mdx)$/]
         },
         type: 'javascript/auto'
-      },  {
+      }, {
         test: /\.(js|mjs|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: babel

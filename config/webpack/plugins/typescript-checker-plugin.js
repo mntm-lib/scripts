@@ -11,6 +11,7 @@ const base = new ForkTsCheckerWebpackPlugin({
     context: paths.appSrc,
     configFile: paths.appTsConfig,
     configOverwrite: {
+      // @ts-expect-error wrong typing
       skipLibCheck: true,
       inlineSourceMap: false,
       declarationMap: false,
@@ -48,6 +49,7 @@ class TypescriptCheckerPlugin {
     hooks.issues.tap('TypescriptCheckerPlugin', (issues) => {
       return issues.map((issue) => {
         issue.severity = 'warning';
+
         return issue;
       });
     });

@@ -13,6 +13,9 @@ class HtmlFaviconWebpackPlugin {
           'HtmlFaviconWebpackPlugin',
           (htmlPluginData, callback) => {
             htmlPluginData.headTags.push({
+              meta: {
+                plugin: 'HtmlFaviconWebpackPlugin'
+              },
               tagName: 'link',
               voidTag: true,
               attributes: {

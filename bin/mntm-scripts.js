@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+// @ts-expect-error module
 require('../lib/unhandled');
 
 const spawn = require('cross-spawn');
@@ -8,7 +9,7 @@ const chalk = require('chalk');
 const args = process.argv.slice(2);
 
 const scriptIndex = args.findIndex(
-  x =>
+  (x) =>
     x === 'build' ||
     x === 'prod' ||
     x === 'start' ||
@@ -17,6 +18,7 @@ const scriptIndex = args.findIndex(
     x === 'development' ||
     x === 'production'
 );
+
 const scriptMap = {
   build: 'build',
   prod: 'build',
@@ -26,17 +28,19 @@ const scriptMap = {
   dev: 'start',
   development: 'start'
 };
+
 const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
 const nodeArgs = scriptIndex > 0 ? args.slice(0, scriptIndex) : [];
 
 if (script in scriptMap) {
   const result = spawn.sync(
     process.execPath,
-    nodeArgs
-      .concat(require.resolve('../scripts/' + scriptMap[script]))
-      .concat(args.slice(scriptIndex + 1)),
+    nodeArgs.
+      concat(require.resolve(`../scripts/${scriptMap[script]}`)).
+      concat(args.slice(scriptIndex + 1)),
     { stdio: 'inherit' }
   );
+
   if (result.signal) {
     if (result.signal === 'SIGKILL') {
       console.log(
@@ -54,11 +58,13 @@ if (script in scriptMap) {
           'be shutting down.'
         )
       );
+    } else {
+      // Fallthrough
     }
     process.exit(1);
   }
   process.exit(result.status);
 } else {
-  console.log(chalk.red('Unknown script "' + script + '".\n'));
+  console.log(chalk.red(`Unknown script "${script}".\n`));
   process.exit(1);
 }

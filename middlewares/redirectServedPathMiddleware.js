@@ -1,17 +1,19 @@
 const path = require('path');
 
 module.exports = (servedPath) => {
-  servedPath = servedPath.slice(0, -1);
+  const served = servedPath.slice(0, -1);
+
   return (req, res, next) => {
     if (
-      servedPath === '' ||
-      req.url === servedPath ||
-      req.url.startsWith(servedPath)
+      served === '' ||
+      req.url === served ||
+      req.url.startsWith(served)
     ) {
-      next();
-    } else {
-      const newPath = path.join(servedPath, req.path !== '/' ? req.path : '');
-      res.redirect(newPath);
+      return next();
     }
+
+    const newPath = path.join(served, req.path !== '/' ? req.path : '');
+
+    res.redirect(newPath);
   };
 };

@@ -6,10 +6,11 @@ const appPackageJson = require(paths.appPackageJson);
 const npm = (name) => path.resolve(paths.appNodeModules, name);
 const resolutions = Object.keys(appPackageJson.resolutions || {}).reduce((acc, name) => {
   acc[name] = npm(name);
+
   return acc;
 }, {});
 const preact = {
-  react: npm('@mntm/react'),
+  'react': npm('@mntm/react'),
   'react-dom': npm('@mntm/react'),
   'preact/compat': npm('preact/compat')
 };

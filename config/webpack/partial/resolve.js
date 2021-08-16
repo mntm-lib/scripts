@@ -8,10 +8,10 @@ module.exports = () => {
     modules: ['node_modules', paths.appNodeModules].concat(
       modules.additionalModulePaths || []
     ),
-    extensions: paths.moduleFileExtensions.map(ext => `.${ext}`),
+    extensions: paths.moduleFileExtensions.map((ext) => `.${ext}`),
     alias: {
       ...aliases,
-      ...(modules.webpackAliases || {})
+      ...modules.webpackAliases || {}
     },
     mainFields: fields.all
   };

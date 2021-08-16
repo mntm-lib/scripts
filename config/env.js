@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const paths = require('./paths');
 
+// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 delete require.cache[require.resolve('./paths')];
 
 require('dotenv-expand')(
@@ -11,18 +12,20 @@ require('dotenv-expand')(
 );
 
 const appDirectory = fs.realpathSync(process.cwd());
-process.env.NODE_PATH = (process.env.NODE_PATH || '')
-  .split(path.delimiter)
-  .filter(folder => folder && !path.isAbsolute(folder))
-  .map(folder => path.resolve(appDirectory, folder))
-  .join(path.delimiter);
 
-const REACT_APP = /^REACT_APP_/i;
+process.env.NODE_PATH = (process.env.NODE_PATH || '').
+  split(path.delimiter).
+  filter((folder) => folder && !path.isAbsolute(folder)).
+  map((folder) => path.resolve(appDirectory, folder)).
+  join(path.delimiter);
 
-const raw = Object.keys(process.env).filter(key => {
+const REACT_APP = /^react_app_/i;
+
+const raw = Object.keys(process.env).filter((key) => {
   return REACT_APP.test(key);
 }).reduce((env, key) => {
   env[key] = process.env[key];
+
   return env;
 }, {
   NODE_ENV: process.env.NODE_ENV,
@@ -32,6 +35,7 @@ const raw = Object.keys(process.env).filter(key => {
 const stringified = {
   'process.env': Object.keys(raw).reduce((env, key) => {
     env[key] = JSON.stringify(raw[key]);
+
     return env;
   }, {})
 };

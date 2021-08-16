@@ -7,6 +7,9 @@ const getModule = require('./partial/module');
 const getPlugins = require('./partial/plugins');
 const getCache = require('./partial/cache');
 
+/**
+ * @param {'production'|'development'} mode
+ */
 module.exports = (mode = 'development', isLegacy = false) => {
   const isEnvProduction = mode === 'production';
 
@@ -23,7 +26,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     optimization: getOptimization(mode, isLegacy),
     resolve: getResolve(),
     module: getModule(mode, isLegacy),
-    plugins: getPlugins(mode, isLegacy),
+    plugins: getPlugins(mode),
     cache: getCache(mode, isLegacy),
     target: isLegacy ? ['web', 'es5'] : ['web', 'es2015'],
     experiments: {
