@@ -12,7 +12,10 @@ module.exports = (mode = 'development', isLegacy = false) => {
       jsc: {
         loose: true,
         dynamicImport: true,
-        target: targets[mode].swc[target]
+        target: targets[mode].swc[target],
+        externalHelpers: true,
+        privateMethod: true,
+        classPrivateProperty: true
       },
       env: {
         loose: true,
