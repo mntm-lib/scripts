@@ -1,11 +1,13 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const targets = require('../../../targets');
+const scope = require('../../../../lib/scope');
 
 /**
  * @param {'production'|'development'} mode
+ * @param {'icss'|'local'} type
  */
-module.exports = (mode = 'development') => {
+module.exports = (mode = 'development', type = 'icss') => {
   const isEnvProduction = mode === 'production';
 
   const emit = isEnvProduction ?
@@ -21,7 +23,11 @@ module.exports = (mode = 'development') => {
     loader: require.resolve('css-loader'),
     options: {
       importLoaders: 1,
-      sourceMap: !isEnvProduction
+      sourceMap: !isEnvProduction,
+      modules: {
+        mode: type,
+        getLocalIdent: scope
+      }
     }
   }, {
     loader: require.resolve('postcss-loader'),

@@ -5,6 +5,14 @@ const memoize = require('../../../lib/memoize');
 const babelLoader = require('../loaders/swc/loader');
 const styleLoader = require('../loaders/style/loader');
 
+const cssRegex = /\.css$/;
+const cssModuleRegex = /\.module\.css$/;
+
+const ujsRegex = /\.(js|mjs|jsx|ts|tsx)$/;
+const mjsRegex = /\.(js|mjs)$/;
+
+const typeAuto = 'javascript/auto';
+
 const babelModules = Object.assign({
   include: [],
   exclude: []
@@ -73,27 +81,14 @@ module.exports = (mode = 'development', isLegacy = false) => {
   return {
     strictExportPresence: true,
     rules: [{
-      parser: {
-        requireEnsure: false
-      }
-    }, {
-      test: /\.(c|m)?js/,
-      type: 'javascript/auto',
+      test: ujsRegex,
+      type: typeAuto,
       resolve: {
         fullySpecified: false
       }
     }, {
       oneOf: [{
-        test: [/\.avif$/],
-        type: 'asset',
-        mimetype: 'image/avif',
-        parser: {
-          dataUrlCondition: {
-            maxSize: 0
-          }
-        }
-      }, {
-        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.avif$/, /\.webp$/],
         type: 'asset',
         parser: {
           dataUrlCondition: {
@@ -102,6 +97,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
         }
       }, {
         test: /\.svg$/,
+        type: typeAuto,
         use: [{
           loader: '@svgr/webpack',
           options: {
@@ -118,27 +114,32 @@ module.exports = (mode = 'development', isLegacy = false) => {
         }, {
           loader: 'file-loader',
           options: {
-            name: 'static/media/[name].[hash].[ext]'
+            name: 'static/media/[name].[hash:8].[ext]'
           }
         }],
         issuer: {
-          and: [/\.(ts|tsx|js|jsx|md|mdx)$/]
-        },
-        type: 'javascript/auto'
+          and: ujsRegex
+        }
       }, {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        test: ujsRegex,
+        type: typeAuto,
         exclude: /node_modules/,
         use: babel
       }, {
-        test: /\.(js|mjs)$/,
+        test: mjsRegex,
+        type: typeAuto,
         include: babelInclude,
         use: babel
       }, {
-        test: /\.css$/,
-        use: styleLoader(mode),
+        test: cssRegex,
+        exclude: cssModuleRegex,
+        use: styleLoader(mode, 'icss'),
         sideEffects: true
       }, {
-        exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+        test: cssModuleRegex,
+        use: styleLoader(mode, 'local')
+      }, {
+        exclude: [/^$/, ujsRegex, /\.html$/, /\.json$/],
         type: 'asset/resource'
       }]
     }]
