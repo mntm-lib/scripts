@@ -5,11 +5,18 @@ const paths = require('./paths');
 // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 delete require.cache[require.resolve('./paths')];
 
-require('dotenv-expand')(
-  require('dotenv').config({
-    path: paths.dotenv
-  })
-);
+const envFile = [
+  `${paths.dotenv}.${process.env.NODE_ENV}`,
+  paths.dotenv
+].find((file) => fs.existsSync(file));
+
+if (envFile) {
+  require('dotenv-expand')(
+    require('dotenv').config({
+      path: envFile
+    })
+  );
+}
 
 const appDirectory = fs.realpathSync(process.cwd());
 

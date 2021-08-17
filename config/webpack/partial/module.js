@@ -2,7 +2,7 @@ const paths = require('../../paths');
 const fields = require('../../fields');
 const memoize = require('../../../lib/memoize');
 
-const babelLoader = require('../loaders/swc/loader');
+const babelLoader = require('../loaders/babel/loader');
 const styleLoader = require('../loaders/style/loader');
 
 const cssRegex = /\.css$/;
