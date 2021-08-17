@@ -81,12 +81,6 @@ module.exports = (mode = 'development', isLegacy = false) => {
   return {
     strictExportPresence: true,
     rules: [{
-      test: ujsRegex,
-      type: typeAuto,
-      resolve: {
-        fullySpecified: false
-      }
-    }, {
       oneOf: [{
         test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.avif$/, /\.webp$/],
         type: 'asset',
@@ -124,12 +118,18 @@ module.exports = (mode = 'development', isLegacy = false) => {
         test: ujsRegex,
         type: typeAuto,
         exclude: /node_modules/,
-        use: babel
+        use: babel,
+        resolve: {
+          fullySpecified: false
+        }
       }, {
         test: mjsRegex,
         type: typeAuto,
         include: babelInclude,
-        use: babel
+        use: babel,
+        resolve: {
+          fullySpecified: false
+        }
       }, {
         test: cssRegex,
         exclude: cssModuleRegex,

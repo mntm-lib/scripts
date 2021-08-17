@@ -17,6 +17,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     mode,
     bail: isEnvProduction,
     entry: paths.appIndexJs,
+    context: paths.appSrc,
     performance: false,
     infrastructureLogging: {
       level: 'none'

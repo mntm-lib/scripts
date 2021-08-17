@@ -21,6 +21,13 @@ module.exports = (mode = 'development', isLegacy = false) => {
         target: targets[mode].babel[target],
         mode: 'usage',
         coreJs: 3
+      },
+      module: {
+        type: 'es6',
+        strict: false,
+        strictMode: false,
+        lazy: true,
+        noInterop: false
       }
     }
   };
