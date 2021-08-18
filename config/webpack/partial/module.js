@@ -6,7 +6,6 @@ const babelLoader = require('../loaders/babel/loader');
 const styleLoader = require('../loaders/style/loader');
 
 const cssRegex = /\.css$/;
-const cssModuleRegex = /\.module\.css$/;
 
 const ujsRegex = /\.(js|mjs|jsx|ts|tsx)$/;
 const mjsRegex = /\.(js|mjs)$/;
@@ -132,12 +131,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
         }
       }, {
         test: cssRegex,
-        exclude: cssModuleRegex,
-        use: styleLoader(mode, 'icss'),
+        use: styleLoader(mode),
         sideEffects: true
-      }, {
-        test: cssModuleRegex,
-        use: styleLoader(mode, 'local')
       }, {
         exclude: [/^$/, ujsRegex, /\.html$/, /\.json$/],
         type: 'asset/resource'
