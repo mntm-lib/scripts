@@ -40,9 +40,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             arguments: true,
             booleans_as_integers: true,
             collapse_vars: true,
-
-            // Bug
-            comparisons: false,
+            comparisons: true,
             directives: true,
             drop_console: false,
             evaluate: true,
