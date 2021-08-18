@@ -5,13 +5,6 @@ const memoize = require('../../../lib/memoize');
 const babelLoader = require('../loaders/babel/loader');
 const styleLoader = require('../loaders/style/loader');
 
-const cssRegex = /\.css$/;
-
-const ujsRegex = /\.(js|mjs|jsx|ts|tsx)$/;
-const mjsRegex = /\.(js|mjs)$/;
-
-const typeAuto = 'javascript/auto';
-
 const babelModules = Object.assign({
   include: [],
   exclude: []
@@ -73,69 +66,72 @@ const babelInclude = memoize((file) => {
  * @param {'production'|'development'} mode
  */
 module.exports = (mode = 'development', isLegacy = false) => {
-  const isEnvProduction = mode === 'production';
-
   const babel = babelLoader(mode, isLegacy);
 
   return {
     strictExportPresence: true,
     rules: [{
+      test: /\.(c|m)?js/,
+      type: 'javascript/auto',
+      resolve: {
+        fullySpecified: false
+      }
+    }, {
+      test: /\.css$/,
+      use: styleLoader(mode),
+      sideEffects: true
+    }, {
+      test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.avif$/, /\.webp$/],
+      type: 'asset/resource',
+      generator: {
+        filename: 'static/[name].[hash:8][ext]'
+      }
+    }, {
+      test: /\.svg$/,
       oneOf: [{
-        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.avif$/, /\.webp$/],
-        type: 'asset',
-        parser: {
-          dataUrlCondition: {
-            maxSize: 0
-          }
-        }
-      }, {
-        test: /\.svg$/,
-        type: typeAuto,
+        // Exclude new URL calls
+        dependency: {
+          not: ['url']
+        },
         use: [{
-          loader: '@svgr/webpack',
+          loader: require.resolve('@svgr/webpack'),
           options: {
             prettier: false,
-            svgo: isEnvProduction,
+            svgo: true,
             svgoConfig: {
               plugins: [{
                 removeViewBox: false
               }]
             },
+            titleProp: false,
             ref: true,
             memo: true
           }
         }, {
-          loader: 'file-loader',
-          options: {
-            name: 'static/media/[name].[hash:8].[ext]'
+          loader: require.resolve('new-url-loader')
+        }]
+      }, {
+        // Export a data URI or emit a separate file
+        type: 'asset',
+        parser: {
+          // Disable inline
+          dataUrlCondition: {
+            maxSize: 0
           }
-        }],
-        issuer: {
-          and: ujsRegex
+        },
+        generator: {
+          filename: 'static/[name].[hash:8][ext]'
         }
-      }, {
-        test: ujsRegex,
-        type: typeAuto,
+      }]
+    }, {
+      oneOf: [{
+        test: /\.(js|mjs|jsx|ts|tsx)$/,
         exclude: /node_modules/,
-        use: babel,
-        resolve: {
-          fullySpecified: false
-        }
+        use: babel
       }, {
-        test: mjsRegex,
-        type: typeAuto,
+        test: /\.(js|mjs)$/,
         include: babelInclude,
-        use: babel,
-        resolve: {
-          fullySpecified: false
-        }
-      }, {
-        test: cssRegex,
-        use: styleLoader(mode),
-        sideEffects: true
-      }, {
-        exclude: [/^$/, ujsRegex, /\.html$/, /\.json$/],
-        type: 'asset/resource'
+        use: babel
       }]
     }]
   };

@@ -16,13 +16,13 @@ module.exports = (mode = 'development', isLegacy = false) => {
     '/[id].[chunkhash:8].chunk.js' :
     '/[name].chunk.js';
 
-  return {
+  const base = {
     path: paths.appBuild,
     pathinfo: !isEnvProduction,
     filename: target + baseFilename,
     chunkFilename: target + baseChunkFilename,
-    assetModuleFilename: 'static/media/[name].[hash:8][ext]',
     publicPath: paths.publicUrlOrPath,
+    assetModuleFilename: 'static/[name].[hash:8][ext]',
     devtoolModuleFilenameTemplate: isEnvProduction ?
       (info) =>
         path.
@@ -32,13 +32,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
         path.
           resolve(info.absoluteResourcePath).
           replaceAll('\\', '/'),
-    module: !isLegacy,
-    library: {
-      type: isLegacy ? 'window' : 'module'
-    },
-    chunkLoadingGlobal: 'mntm',
-    crossOriginLoading: isLegacy ? false : 'anonymous',
     globalObject: 'window',
+    chunkLoadingGlobal: 'mntm',
     environment: {
       arrowFunction: !isLegacy,
       bigIntLiteral: false,
@@ -49,4 +44,18 @@ module.exports = (mode = 'development', isLegacy = false) => {
       module: !isLegacy
     }
   };
+
+  if (isLegacy) {
+    return Object.assign(base, {
+      chunkLoading: 'jsonp'
+    });
+  }
+
+  return Object.assign(base, {
+    module: true,
+    crossOriginLoading: 'anonymous',
+    library: {
+      type: 'module'
+    }
+  });
 };

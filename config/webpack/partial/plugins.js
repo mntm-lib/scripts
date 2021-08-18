@@ -52,9 +52,8 @@ module.exports = (mode = 'development') => {
   if (isEnvProduction) {
     plugins.push(
       new MiniCssExtractPlugin({
-        filename: 'style/[name].[contenthash:8].css',
-        chunkFilename: 'style/[name].[chunkhash:8].chunk.css',
-        experimentalUseImportModule: true
+        filename: 'static/[name].[contenthash:8].css',
+        chunkFilename: 'static/[name].[chunkhash:8].chunk.css'
       })
     );
   } else {

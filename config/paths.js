@@ -36,7 +36,7 @@ module.exports = {
   appTsConfig: resolveApp('tsconfig.json'),
   appBabelModules: resolveApp('babel.modules.json'),
   appNodeModules: resolveApp('node_modules'),
-  appWebpackCache: resolveApp('node_modules/.cache'),
+  appWebpackCache: resolveApp('node_modules/.cache/webpack'),
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
   publicUrlOrPath: './',
 

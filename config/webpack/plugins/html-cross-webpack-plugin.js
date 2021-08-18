@@ -1,7 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const safariPolyfill = '(()=>{var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",e=>{if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()},!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}})()';
-const importInject = '(function(){function t(t,n){var c=document.createElement("script");c.defer=!0,n&&(c.crossOrigin="",c.type="module"),c.src=t,document.head.appendChild(c)}function n(){__LEGACY__.forEach((function(n){t(n,!1)}))}try{if("file:"===location.protocol)n();else{new Function("return import(`data:text/javascript;base64,Cg==`)")().then((function(){__MODERN__.forEach((function(n){t(n,!0)}))})).catch(n)}}catch(t){n()}})()';
+const importInject = '(function(){function n(n,t){var c=document.createElement("script");c.defer=!0,t&&(c.crossOrigin="",c.type="module"),c.src=n,document.head.appendChild(c)}function t(){__LEGACY__.forEach((function(t){n(t,!1)}))}try{if("file:"===location.protocol){t()}else{var c=new Function("return import(`data:text/javascript;base64,Cg==`)");c().then((function(){__MODERN__.forEach((function(t){n(t,!0)}))})).catch(t)}}catch(n){t()}})()';
 
 const shared = new Set();
 const modern = new Set();

@@ -1,6 +1,21 @@
 const getPresets = require('./presets');
 const getPlugins = require('./plugins');
 
+const cache = (mode, packages) => {
+  let cacheIdentifier = mode;
+
+  for (const packageName of packages) {
+    cacheIdentifier += `:${packageName}@`;
+    try {
+      cacheIdentifier += require(`${packageName}/package.json`).version;
+    } catch {
+      // Ignored
+    }
+  }
+
+  return cacheIdentifier;
+};
+
 const assumptions = {
   arrayLikeIsIterable: true,
   constantReexports: false,
@@ -38,10 +53,14 @@ module.exports = (mode = 'development', isLegacy = false) => {
       assumptions,
       presets: getPresets(mode, isLegacy),
       plugins: getPlugins(mode, isLegacy),
-      cacheDirectory: false,
+      cacheIdentifier: cache(mode, [
+        '@mntm/scripts',
+        '@babel/core',
+        'babel-loader'
+      ]),
+      cacheDirectory: true,
       cacheCompression: false,
       compact: isEnvProduction,
-      minify: isEnvProduction,
       comments: isEnvProduction,
       sourceType: 'unambiguous'
     }
