@@ -35,19 +35,14 @@ Promise.resolve().
   then(() => {
     return choosePort(HOST, PORT);
   }).
-  then((port) => {
-    if (port == null) {
-      // We have not found a port.
-      return;
-    }
-
+  then(async (port) => {
     const config = configFactory;
     const appName = require(paths.appPackageJson).name;
 
     const urls = prepareUrls(
       PROTO,
       HOST,
-      PORT,
+      port,
       paths.publicUrlOrPath.slice(0, -1)
     );
 
@@ -63,20 +58,7 @@ Promise.resolve().
     const serverConfig = createDevServerConfig(HOST, PORT);
     const devServer = new WebpackDevServer(compiler, serverConfig);
 
-    // Launch WebpackDevServer.
-    devServer.listen(PORT, HOST, (err) => {
-      if (err) {
-        return console.log(err);
-      }
-
-      if (isInteractive) {
-        clearConsole();
-      }
-
-      console.log(chalk.cyan('Starting the development server...\n'));
-      openBrowser(urls.appUrlForBrowser);
-    });
-
+    // Handle stop
     const stop = () => {
       devServer.close();
       process.exit();
@@ -85,8 +67,28 @@ Promise.resolve().
     process.on('SIGINT', stop);
     process.on('SIGTERM', stop);
     process.stdin.on('end', stop);
+
+    // Wait done.
+    const done = new Promise((resolve) => {
+      compiler.hooks.done.tap('openBrowser', () => {
+        resolve(urls.appUrlForBrowser);
+      });
+    });
+
+    // Launch WebpackDevServer.
+    return devServer.start().then(async () => {
+      if (isInteractive) {
+        clearConsole();
+      }
+
+      console.log(chalk.cyan('Starting the development server...\n'));
+
+      return done;
+    });
   }).
-  then(() => {
+  then((url) => {
+    openBrowser(url);
+
     if (fs.existsSync(paths.vkTunnelConfig)) {
       // Allow all certs
       // @ts-expect-error force number

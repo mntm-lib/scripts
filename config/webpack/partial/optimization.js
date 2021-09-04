@@ -24,6 +24,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
           format: {
             comments: false,
             ascii_only: isLegacy,
+
+            // @ts-expect-error wrong typing
             ecma,
             safari10: true,
             webkit: true
@@ -32,13 +34,16 @@ module.exports = (mode = 'development', isLegacy = false) => {
             ecma: 2020
           },
           compress: {
+            // @ts-expect-error wrong typing
             ecma,
             defaults: true,
             arrows: !isLegacy,
 
             // @ts-expect-error wrong typing
             arguments: true,
-            booleans_as_integers: true,
+
+            // Breaks preact
+            booleans_as_integers: false,
             collapse_vars: true,
             comparisons: true,
             directives: true,
@@ -68,7 +73,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
             sequences: 0,
             switches: true,
             toplevel: !isLegacy,
-            top_retain: false,
+            top_retain: [],
             typeofs: false,
             unsafe: false,
             unsafe_math: true,
@@ -87,12 +92,29 @@ module.exports = (mode = 'development', isLegacy = false) => {
         }
       }),
       new CSSMinimizerPlugin({
-        parallel: true,
+        parallel: false,
+        minify: CSSMinimizerPlugin.cssnanoMinify,
         minimizerOptions: {
-          preset: ['default', {
+          plugins: [
+            require.resolve('postcss-combine-media-query')
+          ],
+          preset: [require.resolve('cssnano-preset-advanced'), {
+            // Use svg loader instead
+            svgo: false,
+
+            // Use css loader instead
+            autoprefixer: false,
+
+            // Side-effects
+            discardUnused: false,
+            zindex: false,
+
+            // Compat
             minifyFontValues: {
               removeQuotes: false
             },
+
+            // Strip all
             discardComments: {
               removeAll: true
             }

@@ -33,9 +33,9 @@ module.exports = (host, port) => {
       disableDotRule: true,
       index: paths.publicUrlOrPath
     },
-    onAfterSetupMiddleware(app) {
-      app.use(redirectServedPath(paths.publicUrlOrPath));
-      app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
+    onAfterSetupMiddleware(devServer) {
+      devServer.app.use(redirectServedPath(paths.publicUrlOrPath));
+      devServer.app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
     }
   };
 };
