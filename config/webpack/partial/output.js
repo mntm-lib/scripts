@@ -35,23 +35,16 @@ module.exports = (mode = 'development', isLegacy = false) => {
     globalObject: 'window',
     chunkLoadingGlobal: 'mntm',
     environment: {
-      arrowFunction: !isLegacy,
-      bigIntLiteral: false,
-      const: false,
       destructuring: false,
-      dynamicImport: !isLegacy,
-      forOf: !isLegacy,
-      module: !isLegacy
+      bigIntLiteral: false
     }
   };
 
   if (isLegacy) {
-    return Object.assign(base, {
-      chunkLoading: 'jsonp'
-    });
+    return Object.assign({}, base);
   }
 
-  return Object.assign(base, {
+  return Object.assign({}, base, {
     module: true,
     crossOriginLoading: 'anonymous',
     library: {
