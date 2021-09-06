@@ -70,10 +70,18 @@ module.exports = (mode = 'development') => {
         parser: safePostCssParser,
         plugins: [
           require('postcss-nested'),
+          require('postcss-color-hex-alpha'),
+          require('postcss-color-functional-notation'),
+          require('postcss-overflow-shorthand'),
+          require('postcss-replace-overflow-wrap'),
+          require('postcss-image-set-function'),
+          [require('autoprefixer'), {
+            flexbox: 'no-2009',
+            remove: false,
+            overrideBrowserslist: targets[mode].postcss
+          }],
           require('postcss-flexbugs-fixes'),
-          require('postcss-preset-env')({
-            browsers: targets[mode].postcss
-          })
+          require('../../plugins/postcss-warnings-plugin')
         ]
       }
     }
