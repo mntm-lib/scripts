@@ -95,6 +95,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
         parallel: false,
         minify: CSSMinimizerPlugin.cssnanoMinify,
         minimizerOptions: {
+          config: false,
+          configFile: false,
           plugins: [
             require.resolve('postcss-combine-media-query')
           ],
