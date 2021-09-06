@@ -29,9 +29,6 @@ module.exports = (mode = 'development', isLegacy = false) => {
     module: getModule(mode, isLegacy),
     plugins: getPlugins(mode),
     cache: getCache(mode, isLegacy),
-    target: isLegacy ? ['web', 'es5'] : ['web', 'es2020'],
-    experiments: {
-      outputModule: !isLegacy
-    }
+    target: isLegacy ? ['web', 'es5'] : ['web', 'es2020']
   };
 };

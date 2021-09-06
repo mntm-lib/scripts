@@ -16,7 +16,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     '/[id].[chunkhash:8].chunk.js' :
     '/[name].chunk.js';
 
-  const base = {
+  return {
     path: paths.appBuild,
     pathinfo: !isEnvProduction,
     filename: target + baseFilename,
@@ -39,16 +39,4 @@ module.exports = (mode = 'development', isLegacy = false) => {
       bigIntLiteral: false
     }
   };
-
-  if (isLegacy) {
-    return Object.assign({}, base);
-  }
-
-  return Object.assign({}, base, {
-    module: true,
-    crossOriginLoading: 'anonymous',
-    library: {
-      type: 'module'
-    }
-  });
 };
