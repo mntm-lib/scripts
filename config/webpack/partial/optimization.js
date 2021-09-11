@@ -97,9 +97,6 @@ module.exports = (mode = 'development', isLegacy = false) => {
         minimizerOptions: {
           config: false,
           configFile: false,
-          plugins: [
-            require.resolve('postcss-combine-media-query')
-          ],
           preset: [require.resolve('cssnano-preset-advanced'), {
             // Use svg loader instead
             svgo: false,
