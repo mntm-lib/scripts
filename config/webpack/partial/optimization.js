@@ -107,6 +107,9 @@ module.exports = (mode = 'development', isLegacy = false) => {
             // Side-effects
             discardUnused: false,
             zindex: false,
+            reduceIdents: {
+              keyframes: false
+            },
 
             // Compat
             minifyFontValues: {
