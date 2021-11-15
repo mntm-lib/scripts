@@ -22,24 +22,15 @@ module.exports = (mode = 'development', isLegacy = false) => {
     }]
   ];
 
-  if (isEnvProduction && !isLegacy) {
-    plugins.push(
-      [require.resolve('babel-plugin-transform-async-to-promises'), {
-        externalHelpers: false,
-        inlineHelpers: true,
-        minify: true,
-        hoist: false,
-        target: 'es6'
-      }]
-    );
-  }
-
   if (isEnvProduction) {
     plugins.push(
       [require.resolve('babel-plugin-transform-react-remove-prop-types'), {
         mode: 'remove',
         removeImport: true,
-        additionalLibraries: ['react-immutable-proptypes']
+        additionalLibraries: [
+          'react-immutable-proptypes',
+          'airbnb-prop-types'
+        ]
       }]
     );
   } else {
