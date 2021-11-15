@@ -23,7 +23,9 @@ module.exports = (mode = 'development', isLegacy = false) => {
         proposals: false
       },
       exclude: isLegacy ?
-        [] :
+        [
+          'transform-typeof-symbol'
+        ] :
         [
           'transform-typeof-symbol',
           'transform-regenerator',
@@ -35,6 +37,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
     require.resolve('@babel/preset-react'), {
       development: !isEnvProduction,
       throwIfNamespace: false,
+      useBuiltIns: true,
+      importSource: '@mntm/react',
       runtime: 'automatic'
     }], [
     require.resolve('@babel/preset-typescript'), {
@@ -42,7 +46,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
       allExtensions: true,
       allowNamespaces: true,
       allowDeclareFields: true,
-      onlyRemoveTypeImports: true
+      onlyRemoveTypeImports: true,
+      optimizeConstEnums: true
     }]
   ];
 };
