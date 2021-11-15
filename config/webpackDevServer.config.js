@@ -2,12 +2,14 @@ const ignoredFiles = require('../lib/ignoredFiles');
 
 const paths = require('./paths');
 
-const noopServiceWorkerMiddleware = require('../middlewares/noopServiceWorkerMiddleware');
-const redirectServedPath = require('../middlewares/redirectServedPathMiddleware');
-
 module.exports = (host, port) => {
   return {
     allowedHosts: 'all',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': '*',
+      'Access-Control-Allow-Headers': '*'
+    },
     compress: false,
     static: [{
       directory: paths.appPublic,
@@ -32,10 +34,6 @@ module.exports = (host, port) => {
     historyApiFallback: {
       disableDotRule: true,
       index: paths.publicUrlOrPath
-    },
-    onAfterSetupMiddleware(devServer) {
-      devServer.app.use(redirectServedPath(paths.publicUrlOrPath));
-      devServer.app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
     }
   };
 };
