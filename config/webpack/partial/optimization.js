@@ -133,7 +133,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
           hmr: {
             chunks: 'all',
             name: 'hmr',
-            test: /(?<!node_modules.*)[/\\]node_modules[/\\](react-refresh|react-hot-loader|@prefresh|@hot-loader|@pmmmwh|webpack|webpack-dev-server)[/\\]/,
+            test: /(?<!node_modules.*)[/\\]node_modules[/\\](react-refresh|react-hot-loader|@prefresh|@hot-loader|@pmmmwh|webpack|webpack-dev-server|webpack-dev-middleware|webpack-hot-middleware)[/\\]/,
             priority: 50,
             enforce: true
           }
@@ -141,7 +141,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
         polyfills: {
           chunks: 'all',
           name: 'polyfills',
-          test: /(?<!node_modules.*)[/\\]node_modules[/\\](core-js|core-js-pure|core-js-compat|@babel|@swc|regenerate|regenerator-runtime|object-assign|es6-object-assign|raf|blueimp-canvas-to-blob|ssr-window|@mntm\/polyfill|@webcomponents([\w-]*promise[\w-]*)|([\w-]*fetch[\w-]*)|([\w-]*polyfill[\w-]*))[/\\]/,
+          test: /(?<!node_modules.*)[/\\]node_modules[/\\](core-js|core-js-pure|core-js-compat|@babel|@swc|regenerate|regenerator-runtime|performance-now|raf|blueimp-canvas-to-blob|ssr-window|@mntm\/polyfill|@webcomponents|@juggle|([\w-]*(object-assign|objectassign|promise|fetch|polyfill|shim|sham|es5|es6)[\w-]*))[/\\]/,
           priority: 40,
           enforce: true
         },
@@ -155,7 +155,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
         framework: {
           chunks: 'all',
           name: 'framework',
-          test: /(?<!node_modules.*)[/\\]node_modules[/\\](@vkontakte\/vkui|@vkontakte\/icons|@vkontakte\/vkjs|@vkontakte\/vk-bridge|@mntm\/vkui|@mntm\/icons|@mntm\/painless-bridge|@popperjs|react-popper)[/\\]/,
+          test: /(?<!node_modules.*)[/\\]node_modules[/\\](@vkontakte\/vkui|@vkontakte\/icons|@vkontakte\/vkjs|@vkontakte\/vk-bridge|@mntm\/vkui|@mntm\/icons|@mntm\/painless-bridge|@popperjs|react-popper|mitt)[/\\]/,
           priority: 20,
           enforce: true
         }
