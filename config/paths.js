@@ -8,7 +8,7 @@ const appTemplate = path.resolve(__dirname, './template/index.html');
 const appDevClient = path.resolve(__dirname, '../lib/WebpackDevServerClient.js');
 const appBaseConfig = path.resolve(__dirname, './webpack/base.config.js');
 
-const moduleFileExtensions = ['mjs', 'js', 'jsx', 'json', 'ts', 'tsx'];
+const moduleFileExtensions = ['tsx', 'ts', 'jsx', 'js', 'mjs', 'mts'];
 
 const resolveModule = (resolveFn, filePath, extensions) => {
   const extension = extensions.find((ext) =>
