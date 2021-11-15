@@ -7,9 +7,10 @@ const safePostCssParser = require('postcss-safe-parser');
 const targets = require('../../../targets');
 
 const MODULE_EXT = '.module.css';
+const MODULE_SHORT_EXT = '.m.css';
 
-const isModule = (name) => name.endsWith(MODULE_EXT);
-const isModuleIndex = (name) => name.endsWith('index.module.css');
+const isModule = (name) => name.endsWith(MODULE_EXT) || name.endsWith(MODULE_SHORT_EXT);
+const isModuleIndex = (name) => name.includes('index.') && isModule(name);
 
 const contentfulName = (context, _, localName) => {
   if (isModuleIndex(context.resourcePath)) {
