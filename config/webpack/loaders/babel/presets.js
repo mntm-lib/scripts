@@ -38,7 +38,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
       development: !isEnvProduction,
       throwIfNamespace: false,
       useBuiltIns: true,
-      importSource: '@mntm/react',
+
+      // ImportSource has internal check so omit
       runtime: 'automatic'
     }], [
     require.resolve('@babel/preset-typescript'), {
