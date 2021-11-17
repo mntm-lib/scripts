@@ -44,7 +44,9 @@ const stringified = {
     env[key] = JSON.stringify(raw[key]);
 
     return env;
-  }, {})
+  }, {}),
+  'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  'process.env.BABEL_ENV': JSON.stringify(process.env.BABEL_ENV)
 };
 
 module.exports = { raw, stringified };
