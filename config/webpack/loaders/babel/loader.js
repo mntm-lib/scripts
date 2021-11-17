@@ -1,6 +1,8 @@
 const getPresets = require('./presets');
 const getPlugins = require('./plugins');
 
+const pkg = require('../../../../package.json');
+
 const cache = (mode, packages) => {
   let cacheIdentifier = mode;
 
@@ -53,11 +55,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
       assumptions,
       presets: getPresets(mode, isLegacy),
       plugins: getPlugins(mode, isLegacy),
-      cacheIdentifier: cache(mode, [
-        '@mntm/scripts',
-        '@babel/core',
-        'babel-loader'
-      ]),
+      cacheIdentifier: cache(mode, Object.keys(pkg.dependencies).filter((name) => name.includes('babel'))),
       cacheDirectory: true,
       cacheCompression: false,
       compact: isEnvProduction,
