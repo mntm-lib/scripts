@@ -1,6 +1,6 @@
 {
   "name": "@mntm/scripts",
-  "version": "3.0.0-rc.9",
+  "version": "3.0.0",
   "author": {
     "name": "Anton Petrov",
     "email": "im@petrov.engineer",
@@ -24,7 +24,7 @@
     "mntm-scripts": "./bin/mntm-scripts.js"
   },
   "scripts": {
-    "mntm-scripts": "node ./bin/mntm-scripts.js"
+    "postinstall": "node ./bin/postinstall.js"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
