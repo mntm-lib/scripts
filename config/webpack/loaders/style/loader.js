@@ -1,5 +1,5 @@
 const path = require('path');
-const crypto = require('crypto');
+const createHash = require('webpack/lib/util/createHash');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const safePostCssParser = require('postcss-safe-parser');
@@ -27,7 +27,7 @@ const contentfulName = (context, _, localName) => {
 const minimalName = (context, _, localName) => {
   if (isModule(context.resourcePath)) {
     const name = path.relative(context.rootContext, context.resourcePath) + localName;
-    const hash = crypto.createHash('md4').update(name, 'utf8').digest('hex').slice(0, 7);
+    const hash = createHash('xxhash64').update(name).digest('hex').slice(0, 7);
 
     return `m${hash}`;
   }

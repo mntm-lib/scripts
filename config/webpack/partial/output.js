@@ -9,20 +9,25 @@ module.exports = (mode = 'development', isLegacy = false) => {
   const target = isLegacy ? 'legacy' : 'modern';
 
   const baseFilename = isEnvProduction ?
-    '/[id].[chunkhash:8].js' :
+    '/[id].[chunkhash].js' :
     '/[name].js';
 
   const baseChunkFilename = isEnvProduction ?
-    '/[id].[chunkhash:8].chunk.js' :
+    '/[id].[chunkhash].chunk.js' :
     '/[name].chunk.js';
 
   return {
+    hashFunction: 'xxhash64',
+    hashDigest: 'hex',
+    hashDigestLength: 12,
     path: paths.appBuild,
     pathinfo: !isEnvProduction,
     filename: target + baseFilename,
     chunkFilename: target + baseChunkFilename,
     publicPath: paths.publicUrlOrPath,
-    assetModuleFilename: 'static/[name].[hash:8][ext]',
+    assetModuleFilename: 'static/[name].[fullhash][ext]',
+    hotUpdateChunkFilename: 'static/[id].[fullhash].hot-update.js',
+    hotUpdateMainFilename: 'static/[fullhash].[runtime].hot-update.json',
     devtoolModuleFilenameTemplate: isEnvProduction ?
       (info) =>
         path.

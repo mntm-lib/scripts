@@ -1,11 +1,14 @@
-const crypto = require('crypto');
 const path = require('path');
+
+const createHash = require('webpack/lib/util/createHash');
 
 const paths = require('../../paths');
 const env = require('../../env');
 
+const pkg = require('../../../package.json');
+
 const createEnvironmentHash = (from) => {
-  const hash = crypto.createHash('md5');
+  const hash = createHash('xxhash64');
 
   hash.update(JSON.stringify(from));
 
@@ -18,9 +21,12 @@ const createEnvironmentHash = (from) => {
 module.exports = (mode, isLegacy = false) => {
   const type = isLegacy ? 'legacy' : 'modern';
 
+  const hashVersion = pkg.version;
+  const hashENV = createEnvironmentHash(env.raw);
+
   return {
     type: 'filesystem',
-    version: createEnvironmentHash(env.raw),
+    version: hashVersion + hashENV,
     cacheDirectory: path.resolve(paths.appWebpackCache, type),
     store: 'pack',
     buildDependencies: {
