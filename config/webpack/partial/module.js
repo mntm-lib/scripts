@@ -1,3 +1,5 @@
+const path = require('path');
+
 const paths = require('../../paths');
 const fields = require('../../fields');
 const memoize = require('../../../lib/memoize');
@@ -62,6 +64,14 @@ const babelInclude = memoize((file) => {
   }
 });
 
+const svgMemoPrefix = memoize((file) => {
+  return `s${path.basename(file, '.svg')}`;
+});
+
+const svgoPrefix = (_, info) => {
+  return info.path ? svgMemoPrefix(info.path) : 'is';
+};
+
 /**
  * @param {'production'|'development'} mode
  */
@@ -93,14 +103,24 @@ module.exports = (mode = 'development', isLegacy = false) => {
         dependency: {
           not: ['url']
         },
-        use: [{
+        use: [babel, {
           loader: require.resolve('@svgr/webpack'),
           options: {
+            babel: false,
             prettier: false,
+            runtimeConfig: false,
             svgo: true,
             svgoConfig: {
               plugins: [{
-                removeViewBox: false
+                removeViewBox: false,
+                multipass: true,
+                prefixIds: {
+                  prefix: svgoPrefix,
+                  delim: ''
+                },
+                cleanupNumericValues: {
+                  floatPrecision: 2
+                }
               }]
             },
             titleProp: false,
