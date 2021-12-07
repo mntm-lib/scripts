@@ -29,6 +29,18 @@ module.exports = (mode = 'development', isLegacy = false) => {
     module: getModule(mode, isLegacy),
     plugins: getPlugins(mode),
     cache: getCache(mode, isLegacy),
-    target: isLegacy ? ['web', 'es5'] : ['web', 'es2020']
+    target: isLegacy ? ['web', 'es5'] : ['web', 'es2020'],
+    experiments: {
+      backCompat: false,
+      cacheUnaffected: true,
+      futureDefaults: true
+    },
+
+    // Due to futureDefaults node polyfills are not provided by default
+    node: {
+      global: true,
+      __filename: true,
+      __dirname: true
+    }
   };
 };
