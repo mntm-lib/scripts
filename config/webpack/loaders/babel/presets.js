@@ -10,7 +10,7 @@ const EXCLUDE_SYMBOL = [
 const EXCLUDE_REGEX = [
   'transform-unicode-regex',
   'transform-sticky-regex',
-  'transform-unicode-property-regex',
+  'proposal-unicode-property-regex',
   'transform-named-capturing-groups-regex',
   'transform-dotall-regex'
 ];
