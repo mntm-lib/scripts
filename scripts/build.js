@@ -5,7 +5,7 @@ require('../lib/paths');
 // Do this as the first thing so that any code reading it knows the right env.
 const env = require('../lib/env');
 
-env.fallback('development');
+env.fallback('production');
 
 const chalk = require('chalk');
 const fs = require('fs-extra');
@@ -53,12 +53,16 @@ const build = async () => {
   });
 };
 
-// We require that you explicitly set browsers and do not fall back to
-// browserslist defaults.
+/*
+ * We require that you explicitly set browsers and do not fall back to
+ * browserslist defaults.
+ */
 Promise.resolve().
   then(async () => {
-    // Remove all content but keep the directory so that
-    // if you're in it, you don't end up in Trash
+    /*
+     * Remove all content but keep the directory so that
+     * if you're in it, you don't end up in Trash
+     */
     fs.emptyDirSync(paths.appBuild);
 
     // Merge with the public folder

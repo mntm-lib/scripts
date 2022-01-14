@@ -38,8 +38,6 @@ module.exports = (mode = 'development', isLegacy = false) => {
             ecma,
             defaults: true,
             arrows: !isLegacy,
-
-            // @ts-expect-error wrong typing
             arguments: true,
 
             // Breaks preact
@@ -96,6 +94,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
         minify: CSSMinimizerPlugin.cssnanoMinify,
         minimizerOptions: {
           config: false,
+
+          // @ts-expect-error wrong typing
           configFile: false,
           preset: [require.resolve('cssnano-preset-advanced'), {
             // Use svg loader instead

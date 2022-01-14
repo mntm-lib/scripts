@@ -1,7 +1,7 @@
 const path = require('path');
 const createHash = require('webpack/lib/util/createHash');
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin').default;
 const safePostCssParser = require('postcss-safe-parser');
 
 const targets = require('../../../targets');

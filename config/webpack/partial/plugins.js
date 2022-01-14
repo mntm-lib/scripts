@@ -11,7 +11,7 @@ const HtmlModuleWebpackPlugin = require('../plugins/html-module-webpack-plugin')
 
 const TypescriptCheckerPlugin = require('../plugins/typescript-checker-plugin');
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin').default;
 const PreactRefreshWebpackPlugin = require('@prefresh/webpack');
 
 /**

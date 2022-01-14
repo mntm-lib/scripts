@@ -2,6 +2,7 @@ const ignoredFiles = require('../lib/ignoredFiles');
 
 const paths = require('./paths');
 
+/** @return {import('webpack-dev-server').Configuration} */
 module.exports = (host, port) => {
   return {
     allowedHosts: 'all',

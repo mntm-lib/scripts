@@ -111,17 +111,15 @@ module.exports = (mode = 'development', isLegacy = false) => {
             runtimeConfig: false,
             svgo: true,
             svgoConfig: {
-              plugins: [{
-                removeViewBox: false,
-                multipass: true,
-                prefixIds: {
-                  prefix: svgoPrefix,
-                  delim: ''
-                },
-                cleanupNumericValues: {
-                  floatPrecision: 2
-                }
-              }]
+              removeViewBox: false,
+              multipass: true,
+              prefixIds: {
+                prefix: svgoPrefix,
+                delim: ''
+              },
+              cleanupNumericValues: {
+                floatPrecision: 2
+              }
             },
             titleProp: false,
             ref: true,

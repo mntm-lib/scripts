@@ -1,6 +1,47 @@
 const targets = require('../../../targets');
 const pkg = require('../../../../package.json');
 
+// Slowdown symbol polyfills
+const EXCLUDE_SYMBOL = [
+  'transform-typeof-symbol'
+];
+
+// Slowdown regex polyfills
+const EXCLUDE_REGEX = [
+  'transform-unicode-regex',
+  'transform-sticky-regex',
+  'transform-unicode-property-regex',
+  'transform-named-capturing-groups-regex',
+  'transform-dotall-regex'
+];
+
+// Slowdown async/await to generator
+const EXCLUDE_GENERATOR = [
+  'transform-regenerator',
+  'transform-async-to-generator'
+];
+
+const EXCLUDE_LEGACY = [
+  ...EXCLUDE_SYMBOL,
+  ...EXCLUDE_REGEX
+];
+
+const EXCLUDE_MODERN = [
+  ...EXCLUDE_SYMBOL,
+  ...EXCLUDE_GENERATOR,
+  ...EXCLUDE_REGEX
+];
+
+// Force transform reserved
+const INCLUDE_LEGACY = [
+  'transform-member-expression-literals',
+  'transform-property-literals',
+  'transform-reserved-words'
+];
+
+// Empty
+const INCLUDE_MODERN = [];
+
 /**
  * @param {'production'|'development'} mode
  */
@@ -22,15 +63,8 @@ module.exports = (mode = 'development', isLegacy = false) => {
         version: corejsVersion,
         proposals: false
       },
-      exclude: isLegacy ?
-        [
-          'transform-typeof-symbol'
-        ] :
-        [
-          'transform-typeof-symbol',
-          'transform-regenerator',
-          'transform-async-to-generator'
-        ],
+      include: isLegacy ? INCLUDE_LEGACY : INCLUDE_MODERN,
+      exclude: isLegacy ? EXCLUDE_LEGACY : EXCLUDE_MODERN,
       targets: targets[mode].babel[target],
       ignoreBrowserslistConfig: true
     }], [
