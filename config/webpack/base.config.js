@@ -31,6 +31,9 @@ module.exports = (mode = 'development', isLegacy = false) => {
     cache: getCache(mode, isLegacy),
     target: isLegacy ? ['web', 'es5'] : ['web', 'es2020'],
     experiments: {
+      // Not ready yet
+      css: false,
+
       backCompat: false,
       cacheUnaffected: true,
       futureDefaults: true
