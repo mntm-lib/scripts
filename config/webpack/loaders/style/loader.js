@@ -1,7 +1,7 @@
 const path = require('path');
 const createHash = require('webpack/lib/util/createHash');
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin').default;
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 
 const targets = require('../../../targets');
@@ -12,7 +12,7 @@ const MODULE_SHORT_EXT = '.m.css';
 const isModule = (name) => name.endsWith(MODULE_EXT) || name.endsWith(MODULE_SHORT_EXT);
 const isModuleIndex = (name) => name.includes('index.') && isModule(name);
 
-const contentfulName = (context, _, localName) => {
+const contentfulName = (context, _, localName = '') => {
   if (isModuleIndex(context.resourcePath)) {
     return `${path.basename(context.context)}__${localName}`;
   }
@@ -24,7 +24,7 @@ const contentfulName = (context, _, localName) => {
   return localName;
 };
 
-const minimalName = (context, _, localName) => {
+const minimalName = (context, _, localName = '') => {
   if (isModule(context.resourcePath)) {
     const name = path.relative(context.rootContext, context.resourcePath) + localName;
     const hash = createHash('xxhash64').update(name).digest('hex').slice(0, 7);

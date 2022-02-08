@@ -28,9 +28,7 @@ const base = new ForkTsCheckerWebpackPlugin({
   },
   async: true,
   formatter: 'basic',
-  logger: {
-    infrastructure: 'silent'
-  },
+  logger: 'webpack-infrastructure',
   issue: {
     include: [{
       file: '../**/src/**/*.{ts,tsx}'
