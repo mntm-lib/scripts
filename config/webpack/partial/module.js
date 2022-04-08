@@ -143,11 +143,11 @@ module.exports = (mode = 'development', isLegacy = false) => {
       }]
     }, {
       oneOf: [{
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        test: /\.(js|mjs|cjs|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: babel
       }, {
-        test: /\.(js|mjs)$/,
+        test: /\.(js|mjs|cjs)$/,
         include: babelInclude,
         use: babel
       }]

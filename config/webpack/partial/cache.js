@@ -18,7 +18,7 @@ const createEnvironmentHash = (from) => {
 /**
  * @param {'production'|'development'} mode
  */
-module.exports = (mode, isLegacy = false) => {
+module.exports = (mode = 'development', isLegacy = false) => {
   const type = isLegacy ? 'legacy' : 'modern';
 
   const hashVersion = pkg.version;
@@ -27,7 +27,7 @@ module.exports = (mode, isLegacy = false) => {
   return {
     type: 'filesystem',
     version: hashVersion + hashENV,
-    cacheDirectory: path.resolve(paths.appWebpackCache, type),
+    cacheDirectory: path.resolve(paths.appWebpackCache, mode, type),
     store: 'pack',
     buildDependencies: {
       defaultWebpack: ['webpack/lib/'],

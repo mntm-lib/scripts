@@ -1,5 +1,7 @@
-const paths = require('../../paths');
 const path = require('path');
+
+const paths = require('../../paths');
+const esm = require('../../esm');
 
 /**
  * @param {'production'|'development'} mode
@@ -16,7 +18,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     '/[id].[chunkhash].chunk.js' :
     '/[name].chunk.js';
 
-  return {
+  const output = {
     hashFunction: 'xxhash64',
     hashDigest: 'hex',
     hashDigestLength: 12,
@@ -44,4 +46,24 @@ module.exports = (mode = 'development', isLegacy = false) => {
       bigIntLiteral: false
     }
   };
+
+  if (!esm(mode, isLegacy)) {
+    return output;
+  }
+
+  return Object.assign({}, output, {
+    chunkFormat: 'module',
+    chunkLoading: 'import',
+    iife: false,
+    library: {
+      type: 'module'
+    },
+    libraryTarget: 'module',
+    module: true,
+    scriptType: 'module',
+    environment: {
+      module: true,
+      destructuring: false
+    }
+  });
 };

@@ -1,4 +1,5 @@
 const paths = require('../paths');
+const esm = require('../esm');
 
 const getOutput = require('./partial/output');
 const getOptimization = require('./partial/optimization');
@@ -34,9 +35,14 @@ module.exports = (mode = 'development', isLegacy = false) => {
       // Not ready yet
       css: false,
 
+      // Forces experimental css
+      futureDefaults: false,
+
       backCompat: false,
       cacheUnaffected: true,
-      futureDefaults: true
+
+      // Use modules
+      outputModule: esm(mode, isLegacy)
     },
 
     // Due to futureDefaults node polyfills are not provided by default
