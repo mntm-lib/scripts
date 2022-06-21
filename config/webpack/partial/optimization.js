@@ -148,7 +148,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
         render: {
           chunks: 'all',
           name: 'render',
-          test: /(?<!node_modules.*)[/\\]node_modules[/\\](react|react-dom|react-reconciler|react-is|scheduler|prop-types|preact|preact-compat|preact-iso|@mntm\/react|style-loader|css-loader|postcss-loader|@svgr|svg-baker-runtime)[/\\]/,
+          test: /(?<!node_modules.*)[/\\]node_modules[/\\](react|react-dom|react-reconciler|react-is|scheduler|prop-types|preact|preact-compat|preact-iso|@mntm\/react|style-loader|css-loader|postcss-loader|@svgr|svg-baker|svg-baker-runtime)[/\\]/,
           priority: 30,
           enforce: true
         },

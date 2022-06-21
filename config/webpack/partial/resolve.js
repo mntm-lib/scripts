@@ -11,8 +11,16 @@ module.exports = () => {
     extensions: paths.moduleFileExtensions.map((ext) => `.${ext}`),
     alias: {
       ...aliases,
-      ...modules.webpackAliases || {}
+      ...modules.webpackAliases
     },
-    mainFields: fields.all
+
+    // Force esm-first
+    mainFields: fields.all,
+    aliasFields: fields.all,
+
+    // Force resolve old way
+    importsFields: [],
+    exportsFields: [],
+    conditionNames: []
   };
 };
