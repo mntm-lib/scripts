@@ -20,6 +20,7 @@ module.exports = (mode = 'development', isLegacy = false) => {
     entry: paths.appIndexJs,
     context: paths.appSrc,
     performance: false,
+    stats: 'errors-warnings',
     infrastructureLogging: {
       level: 'none'
     },
