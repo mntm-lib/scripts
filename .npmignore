@@ -1,4 +1,6 @@
 .editorconfig
 .eslintrc
 yarn.lock
+.yarnrc.yml
+tsconfig.json
 node_modules/

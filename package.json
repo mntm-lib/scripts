@@ -2,6 +2,9 @@
   "name": "@mntm/scripts",
   "version": "4.0.1",
   "packageManager": "yarn@3.2.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "author": {
     "name": "Anton Petrov",
     "email": "im@petrov.engineer",
