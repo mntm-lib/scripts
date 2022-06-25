@@ -4,17 +4,33 @@ const paths = require('./paths');
 const appPackageJson = require(paths.appPackageJson);
 
 const npm = (name) => path.resolve(paths.appNodeModules, name);
-const resolutions = Object.keys(appPackageJson.resolutions || {}).reduce((acc, name) => {
-  acc[name] = npm(name);
+const base = (name) => require.resolve(name, {
+  paths: [
+    paths.appPath
+  ]
+});
 
-  return acc;
-}, {});
-const preact = {
+const app = require(paths.appAliasModules);
+const appAliases = {};
+
+for (const from in app) {
+  appAliases[from] = base(app[from]);
+}
+
+const resolutions = appPackageJson.resolutions || {};
+const resolutionsAliases = {};
+
+for (const name in resolutions) {
+  resolutionsAliases[name] = npm(name);
+}
+
+const preactAliases = {
   'react': npm('@mntm/react'),
   'react-dom': npm('@mntm/react'),
   'preact/compat': npm('preact/compat')
 };
-const aliases = Object.assign({}, resolutions, preact);
+
+const aliases = Object.assign({}, resolutionsAliases, preactAliases, appAliases);
 
 moduleAlias.addAliases(aliases);
 

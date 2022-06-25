@@ -1,6 +1,6 @@
 {
   "name": "@mntm/scripts",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "packageManager": "yarn@3.2.1",
   "publishConfig": {
     "access": "public"
